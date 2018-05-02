@@ -23,14 +23,14 @@ class Prestamo(models.Model):
 	article = Article()
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
-	state = models.ExpressionList("En proceso", "Aprobado", "Rechazado", "Caducado")
+	state = models.ExpressionList("En proceso", "Aprobado", "Rechazado", "Caducado", "Finalizado")
 
 
 class Reserva(models.Model):
 	espacio = Espacio()
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
-	state = models.ExpressionList("En proceso", "Aprobado", "Rechazado")
+	state = models.ExpressionList("En proceso", "Aprobada", "Rechazada", "Finalizada")
 
 
 class General_User(models.Model):
