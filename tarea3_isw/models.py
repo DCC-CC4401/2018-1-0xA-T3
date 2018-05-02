@@ -47,10 +47,21 @@ class General_User(models.Model):
 	def set_password(self, password):
 		self.user.password = password
 
+	def set_rut(self, rut):
+		self.rut = rut
 
-class NP_User(metaclass=General_User):
-	user = User.objects.create_user()
+	def set_habilitado(self, habilitado):
+		self.habilitado = habilitado
 
 
-class Admin(metaclass=General_User):
-	user = User.objects.create_superuser()
+class NP_User(General_User):
+	def __init__(self):
+		super().__init__()
+		self.user = User.objects.create_user()
+
+
+class Admin(General_User):
+	def __init__(self):
+		super().__init__()
+		self.user = User.objects.create_superuser()
+		self.set_habilitado(True)
