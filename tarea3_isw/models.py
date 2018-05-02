@@ -17,3 +17,9 @@ class Espacios(models.Model):
 	photo = models.ImageField()
 	state = models.ExpressionList("Disponible", "Prestado", "En reparación")
 
+class Reservas(models.Model):
+	article = Article()
+	init_date = models.DateTimeField()
+	end_date = models.DateTimeField()
+
+
