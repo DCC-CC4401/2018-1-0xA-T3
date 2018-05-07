@@ -3,9 +3,10 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+
 class Article(models.Model):
 	name = models.CharField(max_length=255)
-	id = models.CharField(max_length=32)
+	id = models.CharField(max_length=32, primary_key=True)
 	desc = models.CharField(max_length=1024)
 	photo = models.ImageField()
 	state = models.ExpressionList("Disponible", "Prestado", "En reparación", "Perdido")
@@ -13,7 +14,7 @@ class Article(models.Model):
 
 class Espacio(models.Model):
 	name = models.CharField(max_length=255)
-	id = models.CharField(max_length=32)
+	id = models.CharField(max_length=32, primary_key=True)
 	desc = models.CharField(max_length=1024)
 	photo = models.ImageField()
 	state = models.ExpressionList("Disponible", "Prestado", "En reparación")
