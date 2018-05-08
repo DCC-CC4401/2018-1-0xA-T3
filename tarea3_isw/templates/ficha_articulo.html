@@ -19,14 +19,16 @@
                 <tr>
                     <th>
                         <!-- Imagen articulo-->
-                        <img src="{{ article.photo }}" alt="{{ article.name }}">
+                        <img src="{{ article.photo }}" alt="{{ article.name }}" width="256" height="256">
                     </th>
                 </tr>
 
                 <tr>
                     <th>
                         <!-- Descripcion articulo-->
-                        {{ article.desc }}
+                        <textarea cols="100">
+                            {{ article.desc }}
+                        </textarea>
                     </th>
                 </tr>
             </table>
