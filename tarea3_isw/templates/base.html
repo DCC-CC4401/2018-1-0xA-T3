@@ -9,7 +9,7 @@
 <table id="cabecera">
 <tr>
     <th style="width: 10%">
-        <img src="../../../static/images/logo-cei.png" height="128" width="128" align="right">
+        <img src="../../static/images/logo-cei.png" height="128" width="128" align="right">
     </th>
 
     <th style="width: 55%;">
@@ -24,17 +24,17 @@
         <table id="datos-personales" style="text-align: right">
             <tr>
                 <th>
-                Nombre
+                Nombre: {{ current_user.first_name }} {{ current_user.last_name }}
                 </th>
             </tr>
             <tr>
                 <th>
-                    Rut
+                    Rut: {{ current_user.profile.rut }}
                 </th>
             </tr>
             <tr>
                 <th>
-                    e-mail
+                    e-mail: {{ current_user.email }}
                 </th>
             </tr>
         </table>
@@ -46,6 +46,13 @@
 
     <th style="width: 5%">
         <button type="button">V</button>
+    </th>
+
+
+    <th style="width: 5%">
+        <form action="/logout/">
+        <button type="submit">logout</button>
+        </form>
     </th>
 </tr>
 </table>

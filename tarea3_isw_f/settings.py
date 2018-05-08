@@ -123,3 +123,7 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+AUTHENTICATION_BACKENDS = ['tarea3_isw.models.EmailBackend']
+
+LOGIN_URL = '/login/'
