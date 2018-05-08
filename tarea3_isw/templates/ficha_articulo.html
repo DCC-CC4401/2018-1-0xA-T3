@@ -8,21 +8,25 @@
                 <tr>
                     <th>
                         <!-- Nombre articulo-->
+                        {{ article.name }}
                     </th>
                     <th>
-                        <!-- Disponibilidad-->
+                        <!-- Estado articulo-->
+                        {{ article.state }}
                     </th>
                 </tr>
 
                 <tr>
                     <th>
                         <!-- Imagen articulo-->
+                        <img src="{{ article.photo }}" alt="{{ article.name }}">
                     </th>
                 </tr>
 
                 <tr>
                     <th>
                         <!-- Descripcion articulo-->
+                        {{ article.desc }}
                     </th>
                 </tr>
             </table>
@@ -33,12 +37,14 @@
                 <tr>
                     <th>
                         <!-- Solicitar reserva-->
+
                     </th>
                 </tr>
 
                 <tr>
                     <th>
                         <!-- Historial reservas-->
+
                     </th>
                 </tr>
             </table>
