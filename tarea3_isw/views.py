@@ -1,10 +1,12 @@
 from django.template import loader
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login as django_auth_login, logout as django_auth_logout
+from django.shortcuts import redirect
+
 
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 
 @login_required
 def common_context_logged(request):
@@ -89,3 +91,21 @@ def logout(request):
 	django_auth_logout(request)
 
 	return login(request)
+
+def register(request):
+	if request.method == 'POST':
+		form = RegisterForm(request.POST)
+		if form.is_valid():
+			return redirect('login')
+
+
+	template = loader.get_template('register.html')
+	context = {
+		'form': RegisterForm()
+	}
+
+
+	return HttpResponse(template.render(context, request))
+
+
+
