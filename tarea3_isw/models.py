@@ -1,11 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
 # Create your models here.
+
 
 class Article(models.Model):
 	name = models.CharField(max_length=255)
-	id = models.CharField(max_length=32)
+	id = models.CharField(max_length=32, primary_key=True)
 	desc = models.CharField(max_length=1024)
 	photo = models.ImageField()
 	state = models.ExpressionList("Disponible", "Prestado", "En reparación", "Perdido")
@@ -13,7 +18,7 @@ class Article(models.Model):
 
 class Espacio(models.Model):
 	name = models.CharField(max_length=255)
-	id = models.CharField(max_length=32)
+	id = models.CharField(max_length=32, primary_key=True)
 	desc = models.CharField(max_length=1024)
 	photo = models.ImageField()
 	state = models.ExpressionList("Disponible", "Prestado", "En reparación")
@@ -33,35 +38,41 @@ class Reserva(models.Model):
 	state = models.ExpressionList("En proceso", "Aprobada", "Rechazada", "Finalizada")
 
 
-class General_User(models.Model):
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self.user = None
-
-	def set_username(self, username):
-		self.user.username = username
-
-	def set_email(self, email):
-		self.user.email = email
-
-	def set_password(self, password):
-		self.user.password = password
-
-	def set_rut(self, rut):
-		self.rut = rut
-
-	def set_habilitado(self, habilitado):
-		self.habilitado = habilitado
+class Profile(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	rut = models.CharField(max_length=15)
+	enabled = models.BooleanField(default=True)
+	is_admin = models.BooleanField(default=False)
 
 
-class NP_User(General_User):
-	def __init__(self):
-		super().__init__()
-		self.user = User.objects.create_user()
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+	if created:
+		Profile.objects.create(user=instance)
 
 
-class Admin(General_User):
-	def __init__(self):
-		super().__init__()
-		self.user = User.objects.create_superuser()
-		self.set_habilitado(True)
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+	instance.profile.save()
+
+
+
+
+# to authenticate with mail
+class EmailBackend(ModelBackend):
+	def authenticate(self, request, username=None, password=None, **kwargs):
+		user_model = get_user_model()
+		try:
+			print("authenticating.. ")
+			print("username: ", username)
+			print("password: ", password)
+			print("email: ", kwargs.get('email'))
+			user = user_model.objects.get(email=kwargs.get('email'))
+		except user_model.DoesNotExist:
+			return None
+		else:
+			if user.check_password(password):
+				return user
+		return None
+

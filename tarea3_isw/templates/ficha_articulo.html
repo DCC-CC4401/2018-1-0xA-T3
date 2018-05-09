@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table>
+    <tr>
+        <th>
+            <table>
+                <tr>
+                    <th>
+                        <!-- Nombre articulo-->
+                        {{ article.name }}
+                    </th>
+                    <th>
+                        <!-- Estado articulo-->
+                        {{ article.state }}
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>
+                        <!-- Imagen articulo-->
+                        <img src="{{ article.photo }}" alt="{{ article.name }}" width="256" height="256">
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>
+                        <!-- Descripcion articulo-->
+                        <textarea cols="100">
+                            {{ article.desc }}
+                        </textarea>
+                    </th>
+                </tr>
+            </table>
+        </th>
+
+        <th>
+            <table>
+                <tr>
+                    <th>
+                        <!-- Solicitar reserva-->
+                        <h2>Solicitar Reserva</h2>
+
+                    </th>
+                </tr>
+
+                <tr>
+                    <th>
+                        <!-- Historial reservas-->
+                        <h2>Historial de Reservas</h2>
+
+                    </th>
+                </tr>
+            </table>
+        </th>
+    </tr>
+</table>
+{% endblock %}
+
