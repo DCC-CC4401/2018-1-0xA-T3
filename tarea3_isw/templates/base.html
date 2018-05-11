@@ -46,7 +46,15 @@
     </th>
 
     <th style="width: 5%">
-        <button type="button">V</button>
+{#        Menu aparece cuando el mouse hace hover. Falta aplicarle css para que funcione#}
+        <div class="dropdown">
+            <button class="dropbtn">V</button>
+            <div class="dropdown-content">
+{#                Falta hacer que los links lleven a distintas parted dependiendo de si el usuario es pn o admin#}
+                <a href="{% url 'perfil_usuario_dueno' %}">Mi Perfil</a>
+                <a href="{% url 'landing_page_pn' %}">Inicio</a>
+            </div>
+        </div>
     </th>
 
 
@@ -58,6 +66,7 @@
 </tr>
 </table>
 <hr color="gray">
+<br><br>
 {% block content %}
 {% endblock %}
 </body>
