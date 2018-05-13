@@ -25,17 +25,25 @@
         <table id="datos-personales" style="text-align: right">
             <tr>
                 <th>
-                Nombre: {{ current_user.first_name }} {{ current_user.last_name }}
+{#                Círculo que indica si el usuario está habilitado para solicitar pedidos#}
+                <span class="dot" style="height: 10px; width: 10px; background-color:
+                        {% if current_user.enabled %}
+                    rgb(20,200,75)
+                {% else %}
+                    rgb(200,20,50)
+                {% endif %}
+                        ; border-radius: 50%; display: inline-block"></span>
+                    {{ current_user.first_name }} {{ current_user.last_name }}
                 </th>
             </tr>
             <tr>
                 <th>
-                    Rut: {{ current_user.profile.rut }}
+                    {{ current_user.profile.rut }}
                 </th>
             </tr>
             <tr>
                 <th>
-                    e-mail: {{ current_user.email }}
+                    {{ current_user.email }}
                 </th>
             </tr>
         </table>
