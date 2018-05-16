@@ -1,0 +1,180 @@
+/* BEGIN HEADER */
+#header-container{
+    width: 100%;
+    height: 200px;
+    margin: 0;
+    padding: 0;
+    background-color: #ededed;
+}
+
+#header-logo img{
+    width:150px;
+    height:150px;
+    margin:0;
+    padding:0;
+    left: 5%;
+    position:absolute;
+    top:25px;
+
+}
+
+.header-icon{
+    font-size:40px;
+    margin:0;
+    padding:0;
+}
+
+#header-right-container{
+    position:absolute;;
+    right:5%;
+    top: 0px;
+    height: inherit;
+    margin:0;
+    padding:0;
+}
+.header-right-alignment{
+    width: 300px;
+    height: inherit;
+    margin: 0;
+    float:left;
+    display: block;
+}
+
+.header-user-info{
+    width:200px;
+    margin:40px 30px 0 30px;
+    padding:0;
+}
+.header-user-info li {
+    list-style-type: none;
+}
+
+.header-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+.header-rut {
+    font-size:12px;
+    text-align:right;
+
+}
+.header-mail{
+    font-size: 15px;
+    text-align:center;
+    font-weight: 900;
+}
+
+.dot{
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+.dot:before{
+    content: ' \25CF';
+    font-size: 30px;
+}
+.dot-red {
+    color: red;
+}
+.dot-green {
+    color: green;
+}
+
+hr.no-margin-hr{
+    background-color: rgba(29, 33, 36, 0.35);
+    margin:0;
+    height:1px;
+}
+/* END HEADER */
+
+/* BEGIN CONTENT BLOCK */
+#content-block{
+    width: 900px;
+    display:block;
+    margin:auto;
+    /*border: 1px dashed red;*/
+}
+.row-element{
+    /*border: 1px solid #000000;*/
+
+}
+/* END CONTENT BLOCK */
+
+
+/* BEGIN landing_page_pn */
+.horiz-tab {
+    list-style-type: none;
+    text-align:center;
+
+}
+.horiz-tab li{
+    display:inline-block;
+    margin: 0 -2px 0 -2px;
+    font-weight: 900;
+}
+.horiz-tab li a{
+    display:block;
+    text-align:center;
+    padding:5px 15px 5px 15px;
+    text-decoration: none;
+    background-color: #ededed;
+    border: 1px solid #1d2124;
+}
+.horiz-tab li a, .horiz-tab li a:hover, .horiz-tab li a:active {
+    color:#000000;
+}
+
+.horiz-tab .active a, .horiz-tab .active a:hover, .horiz-tab .active a:active{
+    background-color: #009d07;
+    color: white;
+}
+
+.search-bar-container{
+    width:800px;
+    height:40px;
+    margin:auto;
+    border: 1px solid #000000;
+    padding: 0;
+    display:flex;
+}
+.search-icon-custom{
+    font-size:20px;
+    padding:0;
+    margin: 10px 0 0 15px;
+}
+
+.search-bar-container-input{
+    width:80%;
+    padding: 0;
+    border: 0;
+    margin:0 0 0 10px;
+}
+.search-button{
+    font-size: 17px;
+    height:inherit;
+    width:120px;
+    border-left: 1px solid #000000;
+}
+.search-button a, .search-button a:hover, .search-button a:active {
+    width:inherit;
+    height:inherit;
+    color:#000000;
+    text-decoration: none;
+    display:block;
+    padding: 7px 0 0 30px;
+
+}
+
+.search-button a:hover{
+    background-color: rgba(90, 98, 104, 0.14);
+}
+
+.advanced-search{
+    text-align:right;
+    margin: 0 40px 0 0;
+
+}
+
+
+
+/* END landing_page_pn */

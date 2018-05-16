@@ -10,7 +10,8 @@ from .forms import LoginForm
 def common_context_logged(request):
 	current_user = request.user
 	context = {
-		'current_user': current_user
+		'current_user': current_user,
+		'user_enabled_class': 'dot-green' if current_user.profile.enabled else 'dot-red'
 	}
 
 	return context
