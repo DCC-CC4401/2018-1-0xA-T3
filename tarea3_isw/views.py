@@ -1,5 +1,5 @@
 from django.template import loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as django_auth_login, logout as django_auth_logout
 from django.shortcuts import redirect
 
@@ -12,16 +12,17 @@ from .forms import LoginForm, RegisterForm
 def common_context_logged(request):
 	current_user = request.user
 	context = {
-		'current_user': current_user
+		'current_user': current_user,
+		'user_enabled_class': 'dot-green' if current_user.profile.enabled else 'dot-red'
 	}
 
 	return context
+
 
 @login_required
 def index(request):
 	template = loader.get_template('base.html')
 	context = {
-		'nothing': 0
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
@@ -30,7 +31,6 @@ def index(request):
 def ficha_articulo(request):
 	template = loader.get_template('ficha_articulo.html')
 	context = {
-		'nothing': 0
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
@@ -39,25 +39,40 @@ def ficha_articulo(request):
 def landing_page_admin(request):
 	template = loader.get_template('landing_page_admin.html')
 	context = {
-		'nothing': 0
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
 @login_required
 def landing_page_pn(request):
-	template = loader.get_template('landing_page_pn.html')
+	return HttpResponseRedirect('/landing-page-pn/articulos/')
+
+@login_required
+def landing_page_pn_articulos(request):
+	template = loader.get_template('landing_page_pn/articulos.html')
 	context = {
-		'nothing': 0
+		'class_articulos': 'active',
+		'class_espacios': ''
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
 @login_required
+def landing_page_pn_espacios(request):
+	template = loader.get_template('landing_page_pn/espacios.html')
+	context = {
+		'class_articulos': '',
+		'class_espacios': 'active'
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+
+
+@login_required
 def perfil_usuario_dueno(request):
 	template = loader.get_template('perfil_usuario_dueno.html')
 	context = {
-		'nothing': 0
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
@@ -76,12 +91,10 @@ def login(request):
 			else:
 				print("mal user")
 
-
 	template = loader.get_template('login.html')
 	context = {
 		'form': LoginForm()
 	}
-
 
 	return HttpResponse(template.render(context, request))
 
