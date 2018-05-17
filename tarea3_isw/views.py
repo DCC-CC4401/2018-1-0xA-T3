@@ -25,7 +25,7 @@ def index(request):
 	context = {
 	}
 	context = {**context, **common_context_logged(request)}
-	return HttpResponse(template.render(context, request))
+	return landing_page_pn(request)
 
 @login_required
 def ficha_articulo(request):

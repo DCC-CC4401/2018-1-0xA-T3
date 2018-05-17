@@ -4,24 +4,19 @@
     <title>
         Inventario CEI
     </title>
-
     <link rel="stylesheet" href="{% static "external/fontawesome-free-5.0.13/svg-with-js/css/fa-svg-with-js.css" %}">
     <link rel="stylesheet" href="{% static "external/bootstrap/css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "css/base.css" %}">
-
- <script src="{% static "external/fontawesome-free-5.0.13/svg-with-js/js/fontawesome-all.min.js" %}"></script>
- <script src="{% static "external/jquery/jquery-3.3.1.min.js" %}"></script>
- <script src="{% static "external/bootstrap/js/bootstrap.min.js" %}"></script>
-
 </head>
-
 <body>
 <div id="header-container">
     <div id="header-logo">
         <img src="{% static "images/cei_logo.svg" %}" alt="Logo CEI">
     </div>
     <div id="header-right-container">
-        <i class="fa fa-envelope header-right-alignment header-icon"></i>
+        <div class="header-right-alignment">
+            <i class="fa fa-envelope  header-icon"></i>
+        </div>
         <div class="header-right-alignment">
             <ul class="header-user-info">
                 <li>
@@ -37,7 +32,24 @@
                 </li>
             </ul>
         </div>
-        <i class="fa fa-user header-right-alignment header-icon"></i>
+        <div class="header-right-alignment">
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="pair-overlay-container">
+                        <div class="front-of-circle">
+                            <i class="fa fa-user header-icon"></i>
+                        </div>
+                        <div class="behind-container">
+                            <span class="back-circle"></span>
+                        </div>
+                    </div>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/perfil-usuario-dueno/">Perfil</a>
+                    <a class="dropdown-item" href="/logout/">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <hr class="no-margin-hr">
@@ -46,6 +58,15 @@
 {% block content %}
 {% endblock %}
 </div>
+
+<!-- BEGIN JAVASCRIPT INCLUDES -->
+<!-- EXTERNAL -->
+ <script src="{% static "external/jquery/jquery-3.3.1.min.js" %}"></script>
+ <script src="{% static "external/popper.min.js" %}"></script>
+ <script src="{% static "external/bootstrap/js/bootstrap.min.js" %}"></script>
+ <script src="{% static "external/fontawesome-free-5.0.13/svg-with-js/js/fontawesome-all.min.js" %}"></script>
+<!-- INTERNAL -->
  <script src="{% static "js/main.js" %}"></script>
+<!-- END JAVASCRIPT INCLUDES -->
 
 </body>
