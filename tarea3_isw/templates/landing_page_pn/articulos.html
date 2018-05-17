@@ -1,0 +1,31 @@
+{% extends '../landing_page_pn.html' %}
+{% block cond_art_esp %}
+    <div class="row-element">
+        <div class="search-bar-container">
+            <i class="fa fa-search search-icon-custom"></i>
+            <input class="search-bar-container-input" type="text" placeholder="Busqueda..."/>
+            <div class="search-button"><a  href="#">Buscar</a></div>
+        </div>
+    </div>
+    <div class="row-element">
+        <div class="advanced-search">
+            <a href="#">Búsqueda Avanzada</a>
+        </div>
+    </div>
+
+     <table id="results" width="80%">
+        {% for set in query %}
+{#            Cada set tiene 5 items#}
+        <tr>
+            {% for item in set %}
+            <td>
+                <!-- Representacion item-->
+{#                Falta encerrar la foto y el nombre en cajas. Creo que se puede hacer con js#}
+                    <img src="{{ item.photo }}" width="64" height="64" alt="{{ item.name }}">
+                    <text>{{ item.name }}</text>
+            </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

@@ -120,8 +120,11 @@ hr.no-margin-hr{
     background-color: #ededed;
     border: 1px solid #1d2124;
 }
-.horiz-tab li a, .horiz-tab li a:hover, .horiz-tab li a:active {
+.horiz-tab li a, .horiz-tab li a:active {
     color:#000000;
+}
+.horiz-tab li a:hover{
+    background-color: rgba(0, 157, 7, 0.57);
 }
 
 .horiz-tab .active a, .horiz-tab .active a:hover, .horiz-tab .active a:active{

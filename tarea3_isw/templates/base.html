@@ -13,11 +13,9 @@
  <script src="{% static "external/jquery/jquery-3.3.1.min.js" %}"></script>
  <script src="{% static "external/bootstrap/js/bootstrap.min.js" %}"></script>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 
 <body>
-
 <div id="header-container">
     <div id="header-logo">
         <img src="{% static "images/cei_logo.svg" %}" alt="Logo CEI">
@@ -38,11 +36,9 @@
                     <div class="header-mail">{{ current_user.email }}</div>
                 </li>
             </ul>
-
         </div>
         <i class="fa fa-user header-right-alignment header-icon"></i>
     </div>
-
 </div>
 <hr class="no-margin-hr">
 <br><br>
@@ -50,4 +46,6 @@
 {% block content %}
 {% endblock %}
 </div>
+ <script src="{% static "js/main.js" %}"></script>
+
 </body>
