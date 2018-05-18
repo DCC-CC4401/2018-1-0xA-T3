@@ -196,6 +196,7 @@ hr.no-margin-hr{
     width:60px;
     z-index:3;
     display:block;
+    border: 1px solid #1d2124;
 }
 .front-of-circle{
     z-index: 10;
