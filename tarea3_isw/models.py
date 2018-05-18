@@ -44,6 +44,12 @@ class Profile(models.Model):
 	enabled = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
 
+	def getLandingPage(self):
+		if self.is_admin:
+			return "/landing-page-admin/"
+		else:
+			return "/landing-page-pn/"
+
 
 
 @receiver(post_save, sender=User)
