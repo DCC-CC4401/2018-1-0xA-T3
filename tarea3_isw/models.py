@@ -45,7 +45,7 @@ class Profile(models.Model):
 	is_admin = models.BooleanField(default=False)
 
 	def getLandingPage(self):
-		if self.is_admin:
+		if self.user.is_staff:
 			return "/landing-page-admin/"
 		else:
 			return "/landing-page-pn/"

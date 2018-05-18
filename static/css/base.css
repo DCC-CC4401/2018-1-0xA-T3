@@ -212,5 +212,25 @@ hr.no-margin-hr{
     left:35px;
 }
 
+#espacios{
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+.s1{
+    color: #005cbf;
+}
+.s2{
+    color: darksalmon;
+}
+.s3{
+    color: #c82333;
+}
+.s4{
+    color: #6f42c1;
+}
+.quincho{
+    color: #1e7e34;
+}
 
 /* END landing_page_pn */

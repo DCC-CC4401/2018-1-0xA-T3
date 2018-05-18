@@ -2,14 +2,42 @@
 {% block cond_art_esp %}
     Espacios
 
-    <div id="calendar">
+    <div id="calendar" align="center">
 
     </div>
 
-    <div id="move-calendar">
-    <input type="submit">
-    <input type="submit">
-    <input type="submit">
-    <input type="submit">
+    <div id="move-calendar" align="center">
+{#    Falta hacer el form para cambiar la semana que se esta viendo#}
+    <form action="" method="post">
+        <input type="submit" id="4bc">
+        <input type="submit" id="1bc">
+        <input type="submit" id="1fw">
+        <input type="submit" id="4fw">
+    </form>
+    </div>
+
+    <div class="salas">
+{#    CSS no esta funcionando#}
+    <table align="inherit">
+        <tr>
+            <th>
+                Quincho <span class="sala-quincho"></span>
+            </th>
+            <th>
+                Sala 2 <span class="sala-2"></span>
+            </th>
+            <th>
+                Sala 4 <span class="sala-4"></span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                Sala 1 <span class="s1"></span>
+            </th>
+            <th>
+                Sala3 <span class="sala-3"></span>
+            </th>
+        </tr>
+    </table>
     </div>
 {% endblock %}
