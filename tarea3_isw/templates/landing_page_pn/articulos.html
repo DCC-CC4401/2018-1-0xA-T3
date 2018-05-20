@@ -9,8 +9,26 @@
     </div>
     <div class="row-element">
         <div class="advanced-search">
-            <a href="#">Búsqueda Avanzada</a>
+            <button onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
         </div>
+    </div>
+
+{#    Falta hacer las forms para consultas y el diseño de la búsquda#}
+    <div id="advanced-options" align="right" style="display: none">
+        <select id="type-select">
+            <option value=""></option>
+            {% for type in types %}
+                <option value="{{ type }}">{{ type }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="disponibility-select">
+            <option value=""></option>
+            <option value="Disponible">Disponible</option>
+            <option value="Prestado">Prestado</option>
+            <option value="En reparación">En Reparación</option>
+            <option value="Perdido">Perdido</option>
+        </select>
     </div>
 
      <table id="results" width="80%">
@@ -28,4 +46,16 @@
         </tr>
     {% endfor %}
     </table>
+
+
+    <script>
+    function toggleAdvancedSearch() {
+        var x = document.getElementById("advanced-options");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+    </script>
 {% endblock %}
