@@ -1,9 +1,11 @@
 {% extends '../landing_page_pn.html' %}
 {% block cond_art_esp %}
+    <form id="search" method="post">
+    {% csrf_token %}
     <div class="row-element">
         <div class="search-bar-container">
             <i class="fa fa-search search-icon-custom"></i>
-            <input class="search-bar-container-input" type="text" placeholder="Busqueda..."/>
+            <input id="searchbar" class="search-bar-container-input" type="text" placeholder="Busqueda..."/>
             <div class="search-button"><a  href="#">Buscar</a></div>
         </div>
     </div>
@@ -16,20 +18,21 @@
 {#    Falta hacer las forms para consultas y el diseño de la búsquda#}
     <div id="advanced-options" align="right" style="display: none">
         <select id="type-select">
-            <option value=""></option>
+            <option value="none"></option>
             {% for type in types %}
                 <option value="{{ type }}">{{ type }}</option>
             {% endfor %}
         </select>
 
         <select id="disponibility-select">
-            <option value=""></option>
+            <option value="none"></option>
             <option value="Disponible">Disponible</option>
             <option value="Prestado">Prestado</option>
             <option value="En reparación">En Reparación</option>
             <option value="Perdido">Perdido</option>
         </select>
     </div>
+    </form>
 
      <table id="results" width="80%">
         {% for set in query %}

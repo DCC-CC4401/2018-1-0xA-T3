@@ -83,3 +83,5 @@ class EmailBackend(ModelBackend):
 				return user
 		return None
 
+class Types(models.Model):
+	type = models.CharField(max_length=32, primary_key=True, default='none')

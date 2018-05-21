@@ -1,5 +1,5 @@
 from django import forms
-from tarea3_isw.models import Article
+from tarea3_isw.models import Article, Types
 
 class LoginForm(forms.Form):
 	email = forms.EmailField(required=True)
@@ -25,8 +25,8 @@ class RegisterForm(forms.Form):
 
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
-	type = forms.CharField()
-	state = forms.CharField()
+	type = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=Types.objects.all().values('type'))
+	state = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=("Disponible", "Prestado", "En reparación", "Perdido"))
 
 	def getResults(self):
 		query = []
