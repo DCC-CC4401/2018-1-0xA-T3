@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, SearchForm
 
 @login_required
 def common_context_logged(request):
@@ -121,4 +121,14 @@ def register(request):
 	return HttpResponse(template.render(context, request))
 
 
+@login_required
+def article_search(request):
+	if request.method == 'POST':
+		form = SearchForm(request.POST)
+		if form.is_valid():
+			template = loader.get_template('landing_page_pn/articulos.html')
+			context = {
+				'query' : form.getResults()
+			}
 
+			return HttpResponse(template.render(context, request))
