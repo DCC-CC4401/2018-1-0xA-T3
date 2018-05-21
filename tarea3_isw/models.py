@@ -14,6 +14,7 @@ class Article(models.Model):
 	desc = models.CharField(max_length=1024)
 	#photo = models.ImageField()
 	state = models.ExpressionList("Disponible", "Prestado", "En reparación", "Perdido")
+	type = models.CharField(max_length=32)
 
 
 class Espacio(models.Model):
