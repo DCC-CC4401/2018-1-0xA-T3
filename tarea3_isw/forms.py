@@ -20,7 +20,7 @@ class RegisterForm(forms.Form):
 		confirm_password = cleaned_data.get('confirm_password')
 
 		if password != confirm_password:
-			raise forms.ValidationError('password and confirm-password does not match')
+			raise forms.ValidationError('Las contraseñas no coinciden')
 
 
 class SearchForm(forms.Form):
