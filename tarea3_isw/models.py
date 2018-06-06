@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
-from django.contrib.auth import get_user_model
-from django.contrib.auth.backends import ModelBackend
+from django.core.mail import send_mail
+from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.base_user import AbstractBaseUser
+
+from .managers import UserManager
 # Create your models here.
 
 
@@ -39,49 +39,36 @@ class Reserva(models.Model):
 	state = models.ExpressionList("En proceso", "Aprobada", "Rechazada", "Finalizada")
 
 
-class Profile(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	rut = models.CharField(max_length=15)
-	enabled = models.BooleanField(default=True)
-	is_admin = models.BooleanField(default=False)
-
-	def getLandingPage(self):
-		if self.user.is_staff:
-			return "/landing-page-admin/"
-		else:
-			return "/landing-page-pn/"
-
-
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-	if created:
-		Profile.objects.create(user=instance)
-
-
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-	instance.profile.save()
-
-
-
-
-# to authenticate with mail
-class EmailBackend(ModelBackend):
-	def authenticate(self, request, username=None, password=None, **kwargs):
-		user_model = get_user_model()
-		try:
-			print("authenticating.. ")
-			print("username: ", username)
-			print("password: ", password)
-			print("email: ", kwargs.get('email'))
-			user = user_model.objects.get(email=kwargs.get('email'))
-		except user_model.DoesNotExist:
-			return None
-		else:
-			if user.check_password(password):
-				return user
-		return None
-
 class Types(models.Model):
 	type = models.CharField(max_length=32, primary_key=True, default='none')
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+	email = models.EmailField('Correo electronico', unique=True)
+	first_name = models.CharField('Primer nombre', max_length=30, blank=True)
+	last_name = models.CharField('Apellido', max_length=30, blank=True)
+	rut = models.CharField('Rut', max_length=15, unique=True)
+	date_joined = models.DateTimeField('Fecha de registro', auto_now_add=True)
+	is_active = models.BooleanField('Activo', default=True)
+	is_enabled = models.BooleanField('Habilitado', default=True)
+
+	is_admin = models.BooleanField('Es admin', default=False)
+
+	objects = UserManager()
+
+	USERNAME_FIELD = 'email'
+	REQUIRED_FIELDS = ['first_name', 'last_name', 'rut']
+
+	class Meta:
+		verbose_name = 'usuario'
+		verbose_name_plural = 'usuarios'
+
+	def get_full_name(self):
+		full_name = '%s %s' % (self.first_name, self.last_name)
+		return full_name.strip()
+
+	def get_short_name(self):
+		return self.first_name
+
+	def email_user(self, subject, message, from_email=None, **kwargs):
+		send_mail(subject, message, from_email, [self.email], **kwargs)
