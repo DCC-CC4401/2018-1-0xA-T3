@@ -25,7 +25,7 @@ class RegisterForm(forms.Form):
 
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
-	type = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=Types.objects.all().values('type'))
+	type = forms.ModelMultipleChoiceField(required=False, widget=forms.CheckboxInput, queryset=Types.objects.all().values('type'))
 	state = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=("Disponible", "Prestado", "En reparación", "Perdido"))
 
 	def getResults(self):
