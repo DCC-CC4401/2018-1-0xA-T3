@@ -7,8 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm
-
-
+from .db_utils import any_article_id, get_article_by_id
 @login_required
 def common_context_logged(request):
 	current_user = request.user
@@ -27,11 +26,30 @@ def index(request):
 
 
 @login_required
-def ficha_articulo(request):
+def ficha_articulo(request, article_name, article_id):
+	def invalid_page():
+		return index(request)
+
+	if article_name is None:
+		return invalid_page()
+	if article_id is None:
+		_id = any_article_id(article_name)
+		if _id is None:
+			return invalid_page()
+		return redirect('/ficha-articulo/%s/id_%s' % (article_name, _id))
+
 	template = loader.get_template('ficha_articulo.html')
+
+	article = get_article_by_id(article_id)
+
+	if article is None:
+		return invalid_page()
+
 	context = {
+		'article': article
 	}
 	context = {**context, **common_context_logged(request)}
+
 	return HttpResponse(template.render(context, request))
 
 
