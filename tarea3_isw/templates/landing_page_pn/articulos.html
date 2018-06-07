@@ -7,28 +7,32 @@
             <div class="search-button"><a  href="#">Buscar</a></div>
         </div>
     </div>
-    <div class="row-element">
-        <div class="advanced-search">
-            <button onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
-        </div>
-    </div>
 
+    <form>
+    {% csrf_token %}
 {#    Falta hacer las forms para consultas y el diseño de la búsquda#}
-    <div id="advanced-options" align="right" style="display: none">
+    <div id="advanced-options" class="row-element" align="right" style="display: none">
         <select id="type-select">
-            <option value=""></option>
+            <option value="" disabled selected>Tipo</option>
             {% for type in types %}
                 <option value="{{ type }}">{{ type }}</option>
             {% endfor %}
         </select>
 
         <select id="disponibility-select">
-            <option value=""></option>
+            <option value="" disabled selected>Disponibilidad</option>
             <option value="Disponible">Disponible</option>
             <option value="Prestado">Prestado</option>
             <option value="En reparación">En Reparación</option>
             <option value="Perdido">Perdido</option>
         </select>
+    </div>
+    </form>
+
+    <div class="row-element">
+        <div class="advanced-search">
+            <button id="search-mode" onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
+        </div>
     </div>
 
      <table id="results" width="80%">
@@ -50,11 +54,18 @@
 
     <script>
     function toggleAdvancedSearch() {
-        var x = document.getElementById("advanced-options");
-        if (x.style.display === "none") {
-            x.style.display = "block";
+        var options = document.getElementById("advanced-options");
+        var btn = document.getElementById("search-mode");
+        var type = document.getElementById("type-select");
+        var disponibility = document.getElementById("disponibility-select");
+        if (options.style.display === "none") {
+            options.style.display = "block";
+            btn.textContent = "Búsqueda Simple";
         } else {
-            x.style.display = "none";
+            options.style.display = "none";
+            btn.textContent = "Búsqueda Avanzada";
+            type.getElementsByTagName('option')[0].selected = 'selected';
+            disponibility.getElementsByTagName('option')[0].selected = 'selected';
         }
     }
     </script>
