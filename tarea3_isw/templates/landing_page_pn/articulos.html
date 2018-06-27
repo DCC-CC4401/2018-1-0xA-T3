@@ -1,0 +1,64 @@
+{% extends '../landing_page_pn.html' %}
+{% block cond_art_esp %}
+    <form id="search" method="post">
+    {% csrf_token %}
+    <div class="row-element">
+        <div class="search-bar-container">
+            <i class="fa fa-search search-icon-custom"></i>
+            <input id="searchbar" class="search-bar-container-input" type="text" placeholder="Busqueda..."/>
+            <div class="search-button"><a  href="#">Buscar</a></div>
+        </div>
+    </div>
+    <div class="row-element">
+        <div class="advanced-search">
+            <button onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
+        </div>
+    </div>
+
+{#    Falta hacer las forms para consultas y el diseño de la búsquda#}
+    <div id="advanced-options" align="right" style="display: none">
+        <select id="type-select">
+            <option value="none"></option>
+            {% for type in types %}
+                <option value="{{ type }}">{{ type }}</option>
+            {% endfor %}
+        </select>
+
+        <select id="disponibility-select">
+            <option value="none"></option>
+            <option value="Disponible">Disponible</option>
+            <option value="Prestado">Prestado</option>
+            <option value="En reparación">En Reparación</option>
+            <option value="Perdido">Perdido</option>
+        </select>
+    </div>
+    </form>
+
+     <table id="results" width="80%">
+        {% for set in query %}
+{#            Cada set tiene 5 items#}
+        <tr>
+            {% for item in set %}
+            <td>
+                <!-- Representacion item-->
+{#                Falta encerrar la foto y el nombre en cajas. Creo que se puede hacer con js#}
+                    <img src="{{ item.photo }}" width="64" height="64" alt="{{ item.name }}">
+                    <text>{{ item.name }}</text>
+            </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+
+
+    <script>
+    function toggleAdvancedSearch() {
+        var x = document.getElementById("advanced-options");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+    </script>
+{% endblock %}

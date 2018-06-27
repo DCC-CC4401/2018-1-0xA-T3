@@ -1,63 +1,73 @@
+{% load static %}
 <head>
     <meta charset="utf-8">
     <title>
-        Inventarion CEI
+        Inventario CEI
     </title>
+    <link rel="stylesheet" href="{% static "external/fontawesome-free-5.0.13/svg-with-js/css/fa-svg-with-js.css" %}">
+    <link rel="stylesheet" href="{% static "external/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
 </head>
-
 <body>
-
-<table id="cabecera">
-<tr>
-    <th style="width: 10%">
-        <img src="../../static/images/logo-cei.png" height="128" width="128" align="right">
-    </th>
-
-    <th style="width: 55%;">
-        &nbsp;
-    </th>
-
-    <th style="width: 5%">
-        <button type="button">e-mail button</button>
-    </th>
-
-    <th style="width: 15%;">
-        <table id="datos-personales" style="text-align: right">
-            <tr>
-                <th>
-                Nombre: {{ current_user.first_name }} {{ current_user.last_name }}
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    Rut: {{ current_user.profile.rut }}
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    e-mail: {{ current_user.email }}
-                </th>
-            </tr>
-        </table>
-    </th>
-
-    <th style="width: 10%">
-        <button type="button">Perfil</button>
-    </th>
-
-    <th style="width: 5%">
-        <button type="button">V</button>
-    </th>
-
-
-    <th style="width: 5%">
-        <form action="/logout/">
-        <button type="submit">logout</button>
-        </form>
-    </th>
-</tr>
-</table>
-<hr>
+<div id="header-container">
+    <div id="header-logo">
+        <img src="{% static "images/cei_logo.svg" %}" alt="Logo CEI">
+    </div>
+    <div id="header-right-container">
+        <div class="header-right-alignment">
+            <i class="fa fa-envelope  header-icon"></i>
+        </div>
+        <div class="header-right-alignment">
+            <ul class="header-user-info">
+                <li>
+                    <div class="header-name">
+                        <span class="dot {{ user_enabled_class }}"></span>{{ current_user.first_name }}&nbsp;{{ current_user.last_name }}
+                    </div>
+                </li>
+                <li>
+                    <div class="header-rut">{{ current_user.rut }}</div>
+                </li>
+                <li>
+                    <div class="header-mail">{{ current_user.email }}</div>
+                </li>
+            </ul>
+        </div>
+        <div class="header-right-alignment">
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="pair-overlay-container">
+                        <div class="front-of-circle">
+                            <i class="fa fa-user header-icon"></i>
+                        </div>
+                        <div class="behind-container">
+                            <span class="back-circle"></span>
+                        </div>
+                    </div>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/perfil-usuario-dueno/">Perfil</a>
+                    <a class="dropdown-item" href={{ current_user.profile.getLandingPage }}>Inicio</a>
+                    <a class="dropdown-item" href="/logout/">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="no-margin-hr">
+<br><br>
+<div id="content-block">
 {% block content %}
 {% endblock %}
+</div>
+
+<!-- BEGIN JAVASCRIPT INCLUDES -->
+<!-- EXTERNAL -->
+ <script src="{% static "external/jquery/jquery-3.3.1.min.js" %}"></script>
+ <script src="{% static "external/popper.min.js" %}"></script>
+ <script src="{% static "external/bootstrap/js/bootstrap.min.js" %}"></script>
+ <script src="{% static "external/fontawesome-free-5.0.13/svg-with-js/js/fontawesome-all.min.js" %}"></script>
+<!-- INTERNAL -->
+ <script src="{% static "js/main.js" %}"></script>
+<!-- END JAVASCRIPT INCLUDES -->
+
 </body>
