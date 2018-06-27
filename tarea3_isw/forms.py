@@ -1,32 +1,28 @@
 from django import forms
-from tarea3_isw.models import Article
+from django.contrib.auth.forms import UserCreationForm
+from tarea3_isw.models import Article, Types, User
+
 
 class LoginForm(forms.Form):
 	email = forms.EmailField(required=True)
 	password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
 
-class RegisterForm(forms.Form):
-	name = forms.CharField(required=True)
+class RegisterForm(UserCreationForm):
+	email = forms.EmailField(required=True)
+	first_name = forms.CharField(required=True)
 	last_name = forms.CharField(required=True)
 	rut = forms.CharField(required=True)
-	email = forms.EmailField(required=True)
-	password = forms.CharField(widget=forms.PasswordInput(), required=True)
-	confirm_password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
-	def clean(self):
-		cleaned_data = super(RegisterForm, self).clean()
-		password = cleaned_data.get('password')
-		confirm_password = cleaned_data.get('confirm_password')
-
-		if password != confirm_password:
-			raise forms.ValidationError('password and confirm-password does not match')
+	class Meta:
+		model = User
+		fields = ('email', 'first_name', 'last_name', 'rut', 'password1', 'password2')
 
 
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
-	type = forms.CharField()
-	state = forms.CharField()
+	type = forms.ModelMultipleChoiceField(required=False, widget=forms.CheckboxInput, queryset=Types.objects.all().values('type'))
+	state = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=("Disponible", "Prestado", "En reparación", "Perdido"))
 
 	def getResults(self):
 		query = []

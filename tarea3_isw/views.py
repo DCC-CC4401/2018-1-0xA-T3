@@ -8,12 +8,14 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm
 
+
 @login_required
 def common_context_logged(request):
 	current_user = request.user
 	context = {
 		'current_user': current_user,
-		'user_enabled_class': 'dot-green' if current_user.profile.enabled else 'dot-red'
+		'rut': current_user.rut,
+		'user_enabled_class': 'dot-green' if current_user.is_enabled else 'dot-red'
 	}
 
 	return context
@@ -21,11 +23,8 @@ def common_context_logged(request):
 
 @login_required
 def index(request):
-	template = loader.get_template('base.html')
-	context = {
-	}
-	context = {**context, **common_context_logged(request)}
 	return landing_page_pn(request)
+
 
 @login_required
 def ficha_articulo(request):
@@ -35,6 +34,7 @@ def ficha_articulo(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+
 @login_required
 def landing_page_admin(request):
 	template = loader.get_template('landing_page_admin.html')
@@ -43,9 +43,11 @@ def landing_page_admin(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+
 @login_required
 def landing_page_pn(request):
 	return HttpResponseRedirect('/landing-page-pn/articulos/')
+
 
 @login_required
 def landing_page_pn_articulos(request):
@@ -57,6 +59,7 @@ def landing_page_pn_articulos(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+
 @login_required
 def landing_page_pn_espacios(request):
 	template = loader.get_template('landing_page_pn/espacios.html')
@@ -66,7 +69,6 @@ def landing_page_pn_espacios(request):
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
-
 
 
 @login_required
@@ -105,18 +107,18 @@ def logout(request):
 
 	return login(request)
 
+
 def register(request):
 	if request.method == 'POST':
 		form = RegisterForm(request.POST)
 		if form.is_valid():
+			form.save()
 			return redirect('login')
-
 
 	template = loader.get_template('register.html')
 	context = {
 		'form': RegisterForm()
 	}
-
 
 	return HttpResponse(template.render(context, request))
 
@@ -128,7 +130,7 @@ def article_search(request):
 		if form.is_valid():
 			template = loader.get_template('landing_page_pn/articulos.html')
 			context = {
-				'query' : form.getResults()
+				'query': form.getResults()
 			}
 
 			return HttpResponse(template.render(context, request))
