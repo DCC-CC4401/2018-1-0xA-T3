@@ -6,15 +6,22 @@ from django.shortcuts import redirect
 
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm, RegisterForm, SearchForm
+from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, AskArticleLoanForm
+from .models import Article
 from .db_utils import any_article_id, get_article_by_id
+
+from .states import *
+import re
+import random
+
 @login_required
 def common_context_logged(request):
 	current_user = request.user
 	context = {
 		'current_user': current_user,
 		'rut': current_user.rut,
-		'user_enabled_class': 'dot-green' if current_user.is_enabled else 'dot-red'
+		'user_enabled_class': 'dot-green' if current_user.is_enabled else 'dot-red',
+		'random_val': str(random.random())
 	}
 
 	return context
@@ -25,18 +32,29 @@ def index(request):
 	return landing_page_pn(request)
 
 
+def dyn_styles(request):
+	template = loader.get_template('css/dynamic.css')
+	context = {
+		'ArticleStates_AVAILABLE': ArticleStates.AVAILABLE.get_css_name(),
+		'ArticleStates_BORROWED': ArticleStates.BORROWED.get_css_name(),
+		'ArticleStates_REPAIRING': ArticleStates.REPAIRING.get_css_name(),
+		'ArticleStates_LOST': ArticleStates.LOST.get_css_name()
+	}
+
+	return HttpResponse(template.render(context, request))
+
+
+def urlify_name(name):
+	return re.sub(r'\s+', '-', name).lower()
+
 @login_required
 def ficha_articulo(request, article_name, article_id):
+	print("Article name:  ", article_name, " -- Article Id:  ", article_id)
 	def invalid_page():
 		return index(request)
 
-	if article_name is None:
-		return invalid_page()
 	if article_id is None:
-		_id = any_article_id(article_name)
-		if _id is None:
-			return invalid_page()
-		return redirect('/ficha-articulo/%s/id_%s' % (article_name, _id))
+		return invalid_page()
 
 	template = loader.get_template('ficha_articulo.html')
 
@@ -45,8 +63,16 @@ def ficha_articulo(request, article_name, article_id):
 	if article is None:
 		return invalid_page()
 
+	url_article_name = urlify_name(article.name)
+
+	if article_name is None or url_article_name != article_name:
+		return redirect('/ficha-articulo/%s/id_%s' % (url_article_name, article_id))
+
 	context = {
-		'article': article
+		'article': article,
+		'article_state': str(ArticleStates(article.state)),
+		'article_state_css': ArticleStates(article.state).get_css_name(),
+		'form': AskArticleLoanForm()
 	}
 	context = {**context, **common_context_logged(request)}
 
@@ -152,3 +178,29 @@ def article_search(request):
 			}
 
 			return HttpResponse(template.render(context, request))
+
+@login_required
+def create_article(request):
+	if request.method == 'POST':
+		form = CreateArticleForm(request.POST, request.FILES)
+		if form.is_valid():
+			article = Article()
+			article.name = form.cleaned_data['name']
+			article.desc = form.cleaned_data['desc']
+			article.save()
+			article.image = form.cleaned_data['image']
+			article.save()
+		else:
+			print("Form is not valid")
+			print(form.errors)
+
+		return redirect('/create-article/')
+
+
+	template = loader.get_template('create_article.html')
+	context = {
+		'form': CreateArticleForm()
+	}
+	context = {**context, **common_context_logged(request)}
+
+	return HttpResponse(template.render(context, request))

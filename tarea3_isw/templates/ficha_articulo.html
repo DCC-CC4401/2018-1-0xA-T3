@@ -1,11 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<ul>
-<li>Nombre articulo: {{ article.name }}</li>
-<li>Id : {{ article.id }}</li>
-<li>Descripcion : {{ article.desc }}</li>
-<li>Estado : {{ article.state }}</li>
-<li>Tipo : {{ article.type }}</li>
-</ul>
+    <!--
+    <ul>
+        <li>Nombre articulo: {{ article.name }}</li>
+        <li>Id : {{ article.id }}</li>
+        <li>Descripcion : {{ article.desc }}</li>
+        <li>Estado : {{ article.state }}</li>
+        <li>Tipo : {{ article.type }}</li>
+    </ul>
+    -->
+    <div class="f-art-full-container">
+        <div class="f-art-left-container">
+            <div class="f-art-left-top-float">
+                <div class="f-art-article-align-left-top f-art-article-name-header ">{{ article.name }}</div>
+                <div class="f-art-article-align-left-top f-art-article-state-common {{ article_state_css }}">&lt; {{ article_state }}</div>
+            </div>
+            <div class="f-art-image">
+                <img src="{{ article.image.url }}">
+            </div>
+            <div class="f-art-desc">
+                {{ article.desc }}
+            </div>
+        </div>
+        <div class="f-art-right-container">
+            {{ form }}
+        </div>
+    </div>
 {% endblock %}
 

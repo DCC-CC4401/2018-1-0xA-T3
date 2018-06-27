@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 # Articulos
 def any_article_id(article_name):
 	try:
-		article = Article.objects.get(name=article_name)
+		article = Article.objects.filter(name=article_name).first()
 	except ObjectDoesNotExist:
 		article = None
 	return article.id if article is not None else None

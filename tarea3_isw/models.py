@@ -6,13 +6,22 @@ from django.contrib.auth.base_user import AbstractBaseUser
 
 from .managers import UserManager
 from .states import *
+
+import os
+from django.conf import settings
 # Create your models here.
+
+
+def article_image_path(instance, filename):
+	print("loading jeje : filename: %s" % filename)
+
+	return os.path.join(settings.ARTICLES_IMAGES_DIRECTORY_NAME, str(instance.id), filename)
 
 
 class Article(models.Model):
 	name = models.CharField(max_length=255)
 	desc = models.CharField(max_length=1024)
-	#photo = models.ImageField()
+	image = models.ImageField(upload_to=article_image_path, blank=True, null=True)
 	state = models.IntegerField(default=int(ArticleStates.AVAILABLE))
 	type = models.CharField(max_length=32)
 
@@ -24,14 +33,14 @@ class Place(models.Model):
 	state = models.IntegerField(default=int(PlaceStates.AVAILABLE))
 
 
-class Loan(models.Model):
-	article = Article()
+class ArticleLoan(models.Model):
+	article = models.ForeignKey('Article', on_delete=models.CASCADE)
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
 	state = models.IntegerField(default=int(LoanStates.PROCESSING))
 
 
-class Reservation(models.Model):
+class PlaceReservation(models.Model):
 	espacio = Place()
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
