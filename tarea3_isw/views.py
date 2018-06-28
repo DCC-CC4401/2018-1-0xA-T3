@@ -1,18 +1,20 @@
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login as django_auth_login, logout as django_auth_logout
+from django.contrib.auth import authenticate, login as django_auth_login, \
+	logout as django_auth_logout
 from django.shortcuts import redirect
-
 
 from django.contrib.auth.decorators import login_required
 
-from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, AskArticleLoanForm
+from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
+	AskArticleLoanForm
 from .models import Article
 from .db_utils import any_article_id, get_article_by_id
 
 from .states import *
 import re
 import random
+
 
 @login_required
 def common_context_logged(request):
@@ -47,9 +49,11 @@ def dyn_styles(request):
 def urlify_name(name):
 	return re.sub(r'\s+', '-', name).lower()
 
+
 @login_required
 def ficha_articulo(request, article_name, article_id):
 	print("Article name:  ", article_name, " -- Article Id:  ", article_id)
+
 	def invalid_page():
 		return index(request)
 
@@ -66,7 +70,8 @@ def ficha_articulo(request, article_name, article_id):
 	url_article_name = urlify_name(article.name)
 
 	if article_name is None or url_article_name != article_name:
-		return redirect('/ficha-articulo/%s/id_%s' % (url_article_name, article_id))
+		return redirect(
+			'/ficha-articulo/%s/id_%s' % (url_article_name, article_id))
 
 	context = {
 		'article': article,
@@ -98,8 +103,41 @@ def landing_page_pn_articulos(request):
 	template = loader.get_template('landing_page_pn/articulos.html')
 	context = {
 		'class_articulos': 'active',
-		'class_espacios': ''
+		'class_espacios': '',
+		'after_query': False
 	}
+
+	# Maneja las request de busqueda
+	if request.method == 'POST':
+		print("asd")
+		form = request.POST
+		query = []
+		n = 0
+		set = []
+
+		# TODO consultas de nombres similares (mayuscula/minuscula, tildes, parecidos, etc)
+		for item in Article.objects.filter(
+				name=form.get('name')):
+			if n == 5:
+				query.append(set)
+				set = []
+				n = 0
+
+			# Checkea que el tipo del articulo sea correcto
+			if form.get('type') != 'none' and item.type != form.get('type'):
+				continue
+
+			# Checkea que el estado del articulo sea correcto
+			if form.get('state') != 'none' and item.state != form.get('state'):
+				continue
+
+			set.append(item)
+
+		context['after_query'] = True
+		context['query'] = query
+		return HttpResponse(template.render(context, request))
+
+
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
@@ -168,18 +206,6 @@ def register(request):
 
 
 @login_required
-def article_search(request):
-	if request.method == 'POST':
-		form = SearchForm(request.POST)
-		if form.is_valid():
-			template = loader.get_template('landing_page_pn/articulos.html')
-			context = {
-				'query': form.getResults()
-			}
-
-			return HttpResponse(template.render(context, request))
-
-@login_required
 def create_article(request):
 	if request.method == 'POST':
 		form = CreateArticleForm(request.POST, request.FILES)
@@ -195,7 +221,6 @@ def create_article(request):
 			print(form.errors)
 
 		return redirect('/create-article/')
-
 
 	template = loader.get_template('create_article.html')
 	context = {

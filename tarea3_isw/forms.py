@@ -31,30 +31,7 @@ class AskArticleLoanForm(forms.Form):
 	end_date = forms.DateTimeField(required=True)
 
 
-
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
 	type = forms.ModelMultipleChoiceField(required=False, widget=forms.CheckboxInput, queryset=Types.objects.all().values('type'))
 	state = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=("Disponible", "Prestado", "En reparación", "Perdido"))
-
-	def getResults(self):
-		query = []
-		n = 0
-		set = []
-		for item in Article.objects.filter(name__unaccent__lower__trigram_similar=self.name):
-			if n == 5:
-				query.append(set)
-				set = []
-				n = 0
-
-			if self.type != 'none':
-				if item.type != self.type:
-					continue
-
-			if self.state != 'none':
-				if item.state != self.state:
-					continue
-
-			set.append(item)
-
-		return query

@@ -25,12 +25,18 @@ class Article(models.Model):
 	state = models.IntegerField(default=int(ArticleStates.AVAILABLE))
 	type = models.CharField(max_length=32)
 
+	def get_url(self):
+		return ""
+
 
 class Place(models.Model):
 	name = models.CharField(max_length=255)
 	desc = models.CharField(max_length=1024)
 	#photo = models.ImageField()
 	state = models.IntegerField(default=int(PlaceStates.AVAILABLE))
+
+	def get_utl(self):
+		return ""
 
 
 class ArticleLoan(models.Model):

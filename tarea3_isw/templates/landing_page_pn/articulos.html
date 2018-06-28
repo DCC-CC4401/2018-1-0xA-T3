@@ -1,26 +1,27 @@
 {% extends '../landing_page_pn.html' %}
 {% block cond_art_esp %}
+
+    <form method="POST">
+        {% csrf_token %}
     <div class="row-element">
         <div class="search-bar-container">
             <i class="fa fa-search search-icon-custom"></i>
-            <input class="search-bar-container-input" type="text" placeholder="Busqueda..."/>
-            <div class="search-button"><a  href="#">Buscar</a></div>
+            <input class="search-bar-container-input" name="search" type="text" placeholder="Busqueda..."/>
+            <div class="search-button"><a href="#" onclick="$(this).closest('form').submit()">Buscar</a></div>
         </div>
     </div>
 
-    <form>
-    {% csrf_token %}
 {#    Falta hacer las forms para consultas y el diseño de la búsquda#}
     <div id="advanced-options" class="row-element" align="right" style="display: none">
         <select id="type-select">
-            <option value="" disabled selected>Tipo</option>
+            <option value="none" disabled selected>Tipo</option>
             {% for type in types %}
                 <option value="{{ type }}">{{ type }}</option>
             {% endfor %}
         </select>
 
         <select id="disponibility-select">
-            <option value="" disabled selected>Disponibilidad</option>
+            <option value="none" disabled selected>Disponibilidad</option>
             <option value="Disponible">Disponible</option>
             <option value="Prestado">Prestado</option>
             <option value="En reparación">En Reparación</option>
@@ -35,21 +36,26 @@
         </div>
     </div>
 
-     <table id="results" width="80%">
-        {% for set in query %}
-{#            Cada set tiene 5 items#}
-        <tr>
-            {% for item in set %}
-            <td>
-                <!-- Representacion item-->
-{#                Falta encerrar la foto y el nombre en cajas. Creo que se puede hacer con js#}
-                    <img src="{{ item.photo }}" width="64" height="64" alt="{{ item.name }}">
-                    <text>{{ item.name }}</text>
-            </td>
+    {% if query|length != 0 %}
+         <table id="results" width="80%">
+            {% for set in query %}
+    {#            Cada set tiene 5 items#}
+            <tr>
+                {% for item in set %}
+                <td>
+                    <!-- Representacion item-->
+    {#                Falta encerrar la foto y el nombre en cajas. Creo que se puede hacer con js#}
+                        <img src="{{ item.photo }}" href="{{ item.get_url }}" width="64" height="64" alt="{{ item.name }}">
+                        <text>{{ item.name }}</text>
+                </td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-    {% endfor %}
-    </table>
+        </table>
+    {% elif after_query %}
+{#        Caso query retorna vacio#}
+        <p>No se encontró ninguna conicidencia</p>
+    {% endif %}
 
 
     <script>
