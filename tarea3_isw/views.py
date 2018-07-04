@@ -3,12 +3,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as django_auth_login, \
 	logout as django_auth_logout
 from django.shortcuts import redirect
-
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm
-from .models import Article
+from .models import Article, ArticleLoan
 from .db_utils import any_article_id, get_article_by_id
 
 from .states import *
@@ -104,39 +103,47 @@ def landing_page_pn_articulos(request):
 	context = {
 		'class_articulos': 'active',
 		'class_espacios': '',
-		'after_query': False
+		'form' : SearchForm(),
+		'after_query': False  # Para saber cuando ya se hizo una consulta
 	}
 
 	# Maneja las request de busqueda
 	if request.method == 'POST':
-		print("asd")
-		form = request.POST
+		form = SearchForm(request.POST)
+
+		# Articulos se agrupan de a 5 para facilitar el orden en el html
 		query = []
 		n = 0
 		set = []
 
 		# TODO consultas de nombres similares (mayuscula/minuscula, tildes, parecidos, etc)
-		for item in Article.objects.filter(
-				name=form.get('name')):
-			if n == 5:
-				query.append(set)
-				set = []
-				n = 0
+		if form.is_valid():
+			try:
+				for item in Article.objects.filter(
+						name__icontains=form.cleaned_data['name']):
+					if n == 5:
+						query.append(set)
+						set = []
+						n = 0
 
-			# Checkea que el tipo del articulo sea correcto
-			if form.get('type') != 'none' and item.type != form.get('type'):
-				continue
+					# Checkea que el tipo del articulo sea correcto
+					if form.cleaned_data['type'] != 'none' and item.type != \
+							form.cleaned_data['type']:
+						continue
 
-			# Checkea que el estado del articulo sea correcto
-			if form.get('state') != 'none' and item.state != form.get('state'):
-				continue
+					# Checkea que el estado del articulo sea correcto
+					if form.cleaned_data['state'] != 'none' and item.state != \
+							form.cleaned_data['state']:
+						continue
 
-			set.append(item)
+					set.append(item)
+
+			except ValueError:
+				# No items found
+				pass
 
 		context['after_query'] = True
 		context['query'] = query
-		return HttpResponse(template.render(context, request))
-
 
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
@@ -229,3 +236,8 @@ def create_article(request):
 	context = {**context, **common_context_logged(request)}
 
 	return HttpResponse(template.render(context, request))
+
+
+@login_required
+def show_last_ten_article_loans(request):
+	query = ArticleLoan.objects.filter()

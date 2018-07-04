@@ -17,7 +17,8 @@ class RegisterForm(UserCreationForm):
 
 	class Meta:
 		model = User
-		fields = ('email', 'first_name', 'last_name', 'rut', 'password1', 'password2')
+		fields = (
+			'email', 'first_name', 'last_name', 'rut', 'password1', 'password2')
 
 
 class CreateArticleForm(forms.Form):
@@ -26,12 +27,19 @@ class CreateArticleForm(forms.Form):
 	image = forms.ImageField()
 
 
+class SearchForm(forms.Form):
+	name = forms.CharField(required=True)
+	type = forms.CharField(widget=forms.Select(
+	                       choices=[("none", "Tipo"),
+	                             ("Disponible", "Disponible"),
+	                             ("Prestado", "Prestado"),
+	                             ("En Reparación", "En Reparación"),
+	                             ("Perdido", "Perdido")]), label="Estado")
+	state = forms.CharField(widget=forms.Select(choices=[("none", "Estado")]),
+	                        label="Tipo")
+
+
 class AskArticleLoanForm(forms.Form):
 	init_date = forms.DateTimeField(required=True)
 	end_date = forms.DateTimeField(required=True)
 
-
-class SearchForm(forms.Form):
-	name = forms.CharField(required=True)
-	type = forms.ModelMultipleChoiceField(required=False, widget=forms.CheckboxInput, queryset=Types.objects.all().values('type'))
-	state = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=("Disponible", "Prestado", "En reparación", "Perdido"))

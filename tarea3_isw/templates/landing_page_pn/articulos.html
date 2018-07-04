@@ -1,33 +1,36 @@
 {% extends '../landing_page_pn.html' %}
 {% block cond_art_esp %}
 
-    <form method="POST">
+    <form method="POST" action="">
         {% csrf_token %}
-    <div class="row-element">
-        <div class="search-bar-container">
-            <i class="fa fa-search search-icon-custom"></i>
-            <input class="search-bar-container-input" name="search" type="text" placeholder="Busqueda..."/>
-            <div class="search-button"><a href="#" onclick="$(this).closest('form').submit()">Buscar</a></div>
-        </div>
-    </div>
+        {{ form.as_p }}
+        <button type="submit">Buscar</button>
 
+{#    <div class="row-element">#}
+{#        <div class="search-bar-container">#}
+{#            <i class="fa fa-search search-icon-custom"></i>#}
+{#            <input class="search-bar-container-input" name="search" type="text" placeholder="Busqueda..."/>#}
+{#            <div class="search-button"><a href="#" onclick="$(this).closest('form').submit()">Buscar</a></div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
 {#    Falta hacer las forms para consultas y el diseño de la búsquda#}
-    <div id="advanced-options" class="row-element" align="right" style="display: none">
-        <select id="type-select">
-            <option value="none" disabled selected>Tipo</option>
-            {% for type in types %}
-                <option value="{{ type }}">{{ type }}</option>
-            {% endfor %}
-        </select>
-
-        <select id="disponibility-select">
-            <option value="none" disabled selected>Disponibilidad</option>
-            <option value="Disponible">Disponible</option>
-            <option value="Prestado">Prestado</option>
-            <option value="En reparación">En Reparación</option>
-            <option value="Perdido">Perdido</option>
-        </select>
-    </div>
+{#    <div id="advanced-options" class="row-element" align="right" style="display: none">#}
+{#        <select id="type-select">#}
+{#            <option value="none" disabled selected>Tipo</option>#}
+{#            {% for type in types %}#}
+{#                <option value="{{ type }}">{{ type }}</option>#}
+{#            {% endfor %}#}
+{#        </select>#}
+{##}
+{#        <select id="disponibility-select">#}
+{#            <option value="none" disabled selected>Disponibilidad</option>#}
+{#            <option value="Disponible">Disponible</option>#}
+{#            <option value="Prestado">Prestado</option>#}
+{#            <option value="En reparación">En Reparación</option>#}
+{#            <option value="Perdido">Perdido</option>#}
+{#        </select>#}
+{#    </div>#}
     </form>
 
     <div class="row-element">

@@ -44,13 +44,15 @@ class ArticleLoan(models.Model):
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
 	state = models.IntegerField(default=int(LoanStates.PROCESSING))
+	user = models.ForeignKey('User', on_delete=models.CASCADE)
 
 
 class PlaceReservation(models.Model):
-	espacio = Place()
+	espacio = models.ForeignKey('Place', on_delete=models.CASCADE)
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
 	state = models.IntegerField(default=int(ReservationStates.PROCESSING))
+	user = models.ForeignKey('User', on_delete=models.CASCADE)
 
 # SEARCH TYPES
 class Types(models.Model):
