@@ -3,34 +3,24 @@
 
     <form method="POST" action="">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Buscar</button>
 
-{#    <div class="row-element">#}
-{#        <div class="search-bar-container">#}
-{#            <i class="fa fa-search search-icon-custom"></i>#}
-{#            <input class="search-bar-container-input" name="search" type="text" placeholder="Busqueda..."/>#}
-{#            <div class="search-button"><a href="#" onclick="$(this).closest('form').submit()">Buscar</a></div>#}
-{#        </div>#}
-{#    </div>#}
-{##}
-{#    Falta hacer las forms para consultas y el diseño de la búsquda#}
-{#    <div id="advanced-options" class="row-element" align="right" style="display: none">#}
-{#        <select id="type-select">#}
-{#            <option value="none" disabled selected>Tipo</option>#}
-{#            {% for type in types %}#}
-{#                <option value="{{ type }}">{{ type }}</option>#}
-{#            {% endfor %}#}
-{#        </select>#}
-{##}
-{#        <select id="disponibility-select">#}
-{#            <option value="none" disabled selected>Disponibilidad</option>#}
-{#            <option value="Disponible">Disponible</option>#}
-{#            <option value="Prestado">Prestado</option>#}
-{#            <option value="En reparación">En Reparación</option>#}
-{#            <option value="Perdido">Perdido</option>#}
-{#        </select>#}
-{#    </div>#}
+    <div class="row-element">
+        <div class="search-bar-container">
+            <i class="fa fa-search search-icon-custom"></i>
+            {{ form.name }}
+            <div class="search-button"><a href="#" onclick="$(this).closest('form').submit()">Buscar</a></div>
+        </div>
+    </div>
+
+    <div id="advanced-options" class="row-element" align="right" style="display: none">
+        <div id="advanced-options" class="row-element" align="right">
+            {{ form.type }}
+        </div>
+
+        <div id="idponibility-select">
+            {{ form.state }}
+        </div>
+    </div>
     </form>
 
     <div class="row-element">
@@ -38,6 +28,7 @@
             <button id="search-mode" onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
         </div>
     </div>
+    <br>
 
     {% if query|length != 0 %}
          <table id="results" width="80%">
@@ -47,7 +38,7 @@
                 {% for item in set %}
                 <td>
                     <!-- Representacion item-->
-    {#                Falta encerrar la foto y el nombre en cajas. Creo que se puede hacer con js#}
+{#    TODO presentacion articulos#}
                         <img src="{{ item.photo }}" href="{{ item.get_url }}" width="64" height="64" alt="{{ item.name }}">
                         <text>{{ item.name }}</text>
                 </td>

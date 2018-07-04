@@ -35,7 +35,7 @@ class Place(models.Model):
 	#photo = models.ImageField()
 	state = models.IntegerField(default=int(PlaceStates.AVAILABLE))
 
-	def get_utl(self):
+	def get_url(self):
 		return ""
 
 

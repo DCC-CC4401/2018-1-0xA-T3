@@ -103,7 +103,7 @@ def landing_page_pn_articulos(request):
 	context = {
 		'class_articulos': 'active',
 		'class_espacios': '',
-		'form' : SearchForm(),
+		'form': SearchForm(),
 		'after_query': False  # Para saber cuando ya se hizo una consulta
 	}
 
@@ -121,10 +121,9 @@ def landing_page_pn_articulos(request):
 			try:
 				for item in Article.objects.filter(
 						name__icontains=form.cleaned_data['name']):
-					if n == 5:
+					if n % 5 == 0:
 						query.append(set)
 						set = []
-						n = 0
 
 					# Checkea que el tipo del articulo sea correcto
 					if form.cleaned_data['type'] != 'none' and item.type != \
@@ -137,6 +136,10 @@ def landing_page_pn_articulos(request):
 						continue
 
 					set.append(item)
+					n += 1
+
+				if n < 5:
+					query.append(set)
 
 			except ValueError:
 				# No items found
@@ -240,4 +243,12 @@ def create_article(request):
 
 @login_required
 def show_last_ten_article_loans(request):
-	query = ArticleLoan.objects.filter()
+	article_history = ArticleLoan.objects.filter(user=request.user) \
+		        .order_by(ArticleLoan.init_date)[:10]
+
+	template = loader.get_template('perfil_usuario_dueno.html')
+	context = {
+		'article-history': article_history
+	}
+
+	return HttpResponse(template.render(context, request))

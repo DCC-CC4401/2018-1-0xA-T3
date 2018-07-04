@@ -38,6 +38,14 @@ class SearchForm(forms.Form):
 	state = forms.CharField(widget=forms.Select(choices=[("none", "Estado")]),
 	                        label="Tipo")
 
+	def __init__(self, *args, **kwargs):
+		super(SearchForm, self).__init__(*args, **kwargs)
+		self.fields['name'].widget.attrs\
+			.update({'id': 'searchbar',
+		             'class': 'search-bar-container-input',
+		             'type': 'text',
+		             'placeholder': 'Búesqueda...'})
+
 
 class AskArticleLoanForm(forms.Form):
 	init_date = forms.DateTimeField(required=True)
