@@ -37,11 +37,7 @@ def ficha_articulo(request):
 
 @login_required
 def landing_page_admin(request):
-	template = loader.get_template('landing_page_admin.html')
-	context = {
-	}
-	context = {**context, **common_context_logged(request)}
-	return HttpResponse(template.render(context, request))
+	return HttpResponseRedirect('/landing-page-admin/usuarios')
 
 @login_required
 def landing_page_admin_usuarios(request):
