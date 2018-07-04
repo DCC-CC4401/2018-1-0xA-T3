@@ -113,6 +113,8 @@ def login(request):
 			user = authenticate(email=email, password=password)
 			if user is not None:
 				django_auth_login(request, user)
+				if user.is_admin:
+					return landing_page_admin(request)
 				return landing_page_pn(request)
 			else:
 				print("mal user")
