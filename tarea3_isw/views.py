@@ -43,6 +43,30 @@ def landing_page_admin(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+@login_required
+def landing_page_admin_usuarios(request):
+	template = loader.get_template('landing_page_admin/usuarios.html')
+	context = {
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_articuloespacio(request):
+	template = loader.get_template('landing_page_admin/articuloespacio.html')
+	context = {
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_grilla(request):
+	template = loader.get_template('landing_page_admin/grilla.html')
+	context = {
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
 
 @login_required
 def landing_page_pn(request):

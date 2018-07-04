@@ -1,20 +1,82 @@
+
+<!-- codigo base, la barra de arriba -->
+
 {% extends 'base.html' %}
+
+{% load static %}
+
+<!-- el html de esta pagina en especifico -->
 {% block content %}
+
+    {# EMPEZO EL CSS #}
+    <style>
+body {
+    font-family: "Lato", sans-serif;
+}
+
+.sidenav {
+    width: 130px;
+    position: fixed;
+    z-index: 1;
+    top: 400px;
+    left: 10px;
+    overflow-x: hidden;
+    padding: 8px 0;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #2196F3;
+    display: block;
+}
+
+.sidenav a:hover {
+    color: #064579;
+}
+
+.main {
+    margin-left: 140px; /* Same width as the sidebar + left position in px */
+    font-size: 28px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
+</style>
+
+    {#  TERMINO EL CSS #}
+
     {# aqui va el html especifico #}
 
+    <!-- administrador con la barra bonita de abajo -->
     <div class="title">
     <h1>Administrador</h1>
     </div>
 
     <hr width="80%">
 
+    <!-- No necesitamos esta barra de busqueda por ahora
+
     <div align="center" class="search-bar">
 {#    Barra de busqueda #}
     <input type="text"/> <input type="submit" value="Buscar">
     </div>
 
-    <div align="center" class="gestion">
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <div align="left" class="sidenav">
     <!-- gestion de usuarios, espacios y articulos -->
+        <a href="usuarios"> <img src="{% static "images/user.jpg"%}" height="42" width="42" alt="Usuarios"> </a>
+        <a href="articuloespacio"> <img src="{% static "images/shoppingcart.png"%}" height="42" width="42" alt="Articulos y espacios"> </a>
+        <a href="grilla"> <img src="{% static "images/clock.svg"%}" height="42" width="42" alt="Grilla"> </a>
 
     </div>
 
