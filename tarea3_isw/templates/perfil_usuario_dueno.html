@@ -2,17 +2,58 @@
 {% block content %}
     {# aqui va el html especifico #}
     <div id="solicitudes">
-{#    Botones para reservar espacio y pedir articulo #}
-    <input type="button" value="Reserva Tu Espacio" align="left"/> <input type="button" value="Pide Tu Artículo" align="right">
+        {#    Botones para reservar espacio y pedir articulo #}
+        <input type="button" value="Reserva Tu Espacio" align="left"/> <input
+            type="button" value="Pide Tu Artículo" align="right">
     </div>
 
     <div>
-{#    Elegir tabs de reserva o prestamo#}
-    <input type="button" value="Reserva" align="left"/> <input type="button" value="Préstamos" align="right">
+        {#    Elegir tabs de reserva o prestamo#}
+        <input type="button" value="Reservas" align="left"/> <input
+            type="button" value="Préstamos" align="right">
     </div>
 
     <div>
-    <!-- Tabs con prestamos/reservas pasadas-->
+        <!-- Tabs con prestamos/reservas pasadas-->
+        <table id="history">
+            <td id="article-history">
+                <tr>
+                    {% for article in article_history %}
+                        <tr>
+                            {{ article.name }}
+                        </tr>
+                    {% endfor %}
+                </tr>
+            </td>
 
+            <td id="place-history" style="display: none">
+                <tr>
+                    {% for place in place_history %}
+                        <tr>
+                            {{ place.name }}
+                        </tr>
+                    {% endfor %}
+                </tr>
+            </td>
+
+            <td id="history-details">
+
+            </td>
+        </table>
     </div>
+
+    <script>
+    var art_hist = document.getElementById("article-history");
+    var place_hist = document.getElementById("place-history");
+
+    function displayArticleHistory(){
+        place_hist.style.display = "none";
+        art_hist.style.display = "block";
+    }
+
+    function displayPlaceHistory() {
+        art_hist.style.display = "none";
+        place_hist.style.display = "block";
+    }
+    </script>
 {% endblock %}

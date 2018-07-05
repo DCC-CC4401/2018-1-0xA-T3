@@ -8,6 +8,14 @@ class LoginForm(forms.Form):
 	email = forms.EmailField(required=True)
 	password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
+	def __init__(self, *args, **kwargs):
+		super(LoginForm, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs\
+			.update({'placeholder': 'e-mail'})
+
+		self.fields['password'].widget.attrs\
+			.update({'placeholder': 'password'})
+
 
 class RegisterForm(UserCreationForm):
 	email = forms.EmailField(required=True)

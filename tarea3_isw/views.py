@@ -121,9 +121,11 @@ def landing_page_pn_articulos(request):
 			try:
 				for item in Article.objects.filter(
 						name__icontains=form.cleaned_data['name']):
-					if n % 5 == 0:
+					n += 1
+					if n == 5:
 						query.append(set)
 						set = []
+						n = 0
 
 					# Checkea que el tipo del articulo sea correcto
 					if form.cleaned_data['type'] != 'none' and item.type != \
@@ -136,9 +138,9 @@ def landing_page_pn_articulos(request):
 						continue
 
 					set.append(item)
-					n += 1
 
-				if n < 5:
+				# Se agregan los items que sobren, si no llegan a 5
+				if n != 0:
 					query.append(set)
 
 			except ValueError:
