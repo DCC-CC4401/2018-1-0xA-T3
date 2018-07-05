@@ -26,9 +26,7 @@
         'Tuesday',
         'Wednesday',
         'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday'
+        'Friday'
       ],
       onInit: function () {},
       onAddPeriod: function () {},
@@ -221,14 +219,14 @@
 
       $('<table class="jqs-table"><tr></tr></table>').appendTo($(this.element));
 
-      for (var i = 0; i < 7; i++) {
+      for (var i = 0; i < 5; i++) {
         $('<td><div class="jqs-day"></div></td>').
           appendTo($('.jqs-table tr', this.element));
       }
 
       $('<div class="jqs-grid"><div class="jqs-grid-head"></div></div>').appendTo($(this.element));
 
-      for (var j = 0; j < 25; j++) {
+      for (var j = 9; j < 19; j++) {
         $('<div class="jqs-grid-line"><div class="jqs-grid-hour">' + this.formatHour(j) + '</div></div>').
           appendTo($('.jqs-grid', this.element));
       }
@@ -241,7 +239,7 @@
           '"></div>';
       }
 
-      for (var k = 0; k < 7; k++) {
+      for (var k = 0; k < 5; k++) {
         $('<div class="jqs-grid-day">' + this.settings.days[k] + dayRemove + dayDuplicate + '</div>').
           appendTo($('.jqs-grid-head', this.element));
       }
@@ -647,8 +645,11 @@
         return time + ind;
       }
 
-      if (hour < 10) {
-        hour = '0' + hour;
+      if ((hour+9) < 10) {
+        hour = '0' + (hour+9);
+      }
+      else{
+        hour += 9;
       }
       if (mn < 10) {
         mn = '0' + mn;
@@ -664,7 +665,7 @@
      */
     positionFormat: function (time) {
       var split = time.split(':');
-      var hour = parseInt(split[0]);
+      var hour = parseInt(split[0]) - 9;
       var mn = parseInt(split[1]);
 
       if (this.settings.hour === 12) {

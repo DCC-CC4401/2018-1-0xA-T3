@@ -68,7 +68,7 @@
 }
 .jqs-grid-day {
   position: relative;
-  width: 14.28571%;
+  width: 20%;
   padding: 8px 0 4px 0;
   text-align: center;
   font-size: 12px;
@@ -108,7 +108,7 @@
 }
 .jqs-day {
   width: 100%;
-  height: 960px;
+  height: 360px;
   position: relative;
   -webkit-user-select: none;
   -moz-user-select: none;

@@ -3,13 +3,13 @@ $("#schedule-demo").jqs({
         data: [{
             day: 0,
             periods: [{
-                start: "00:00",
-                end: "02:00",
+                start: "09:00",
+                end: "11:00",
                 title: "Una reserva"
             },
             {
-                start: "20:00",
-                end: "00:00",
+                start: "16:00",
+                end: "18:00",
                 title: "Otra reserva"
             }]
         }, {
@@ -30,19 +30,19 @@ $("#schedule-espacio-demo").jqs({
         data: [{
             day: 0,
             periods: [{
-                start: "00:00",
-                end: "02:00",
+                start: "09:00",
+                end: "11:00",
                 title: "Una reserva"
             },
             {
-                start: "20:00",
-                end: "00:00",
+                start: "16:00",
+                end: "18:00",
                 title: "Otra reserva",
                 backgroundColor: "rgba(207, 0, 15, 0.5)"
             },
             {
-                start: "19:00",
-                end: "20:00",
+                start: "15:00",
+                end: "16:00",
                 title: "Otra2 reserva",
                 backgroundColor: "rgba(207, 0, 15, 0.5)"
             }]
