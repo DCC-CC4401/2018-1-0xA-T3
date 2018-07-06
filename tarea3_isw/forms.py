@@ -23,6 +23,26 @@ class RegisterForm(UserCreationForm):
 	last_name = forms.CharField(required=True)
 	rut = forms.CharField(required=True)
 
+	def __init__(self, *args, **kwargs):
+		super(RegisterForm, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs\
+			.update({'placeholder': 'Correo'})
+
+		self.fields['first_name'].widget.attrs\
+			.update({'placeholder': 'Nombre'})
+
+		self.fields['last_name'].widget.attrs\
+			.update({'placeholder': 'Apellido'})
+
+		self.fields['rut'].widget.attrs\
+			.update({'placeholder': 'Rut'})
+
+		self.fields['password1'].widget.attrs\
+			.update({'placeholder': 'Contraseña'})
+
+		self.fields['password2'].widget.attrs\
+			.update({'placeholder': 'Confirmar Contraseña'})
+
 	class Meta:
 		model = User
 		fields = (
