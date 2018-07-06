@@ -1,20 +1,42 @@
+
+<!-- codigo base, la barra de arriba -->
+
 {% extends 'base.html' %}
+
+{% load static %}
+{% block css_content %}
+        <link rel="stylesheet" href="{% static "css/sideviewadmin.css" %}">
+{% endblock %}
+<!-- el html de esta pagina en especifico -->
 {% block content %}
+
+
     {# aqui va el html especifico #}
 
+    <!-- administrador con la barra bonita de abajo -->
     <div class="title">
     <h1>Administrador</h1>
     </div>
 
     <hr width="80%">
 
+    <!-- No necesitamos esta barra de busqueda por ahora
+
     <div align="center" class="search-bar">
 {#    Barra de busqueda #}
     <input type="text"/> <input type="submit" value="Buscar">
     </div>
 
-    <div align="center" class="gestion">
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <div align="left" class="sidenav">
     <!-- gestion de usuarios, espacios y articulos -->
+        <a href="usuarios"> <img src="{% static "images/user.jpg"%}" height="42" width="42" alt="Usuarios"> </a>
+        <a href="articuloespacio"> <img src="{% static "images/shoppingcart.png"%}" height="42" width="42" alt="Articulos y espacios"> </a>
+        <a href="grilla"> <img src="{% static "images/clock.svg"%}" height="42" width="42" alt="Grilla"> </a>
 
     </div>
 

@@ -85,7 +85,27 @@ def ficha_articulo(request, article_name, article_id):
 
 @login_required
 def landing_page_admin(request):
-	template = loader.get_template('landing_page_admin.html')
+	return HttpResponseRedirect('/landing-page-admin/usuarios')
+
+@login_required
+def landing_page_admin_usuarios(request):
+	template = loader.get_template('landing_page_admin/usuarios.html')
+	context = {
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_articuloespacio(request):
+	template = loader.get_template('landing_page_admin/articuloespacio.html')
+	context = {
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_grilla(request):
+	template = loader.get_template('landing_page_admin/grilla.html')
 	context = {
 	}
 	context = {**context, **common_context_logged(request)}
@@ -183,6 +203,8 @@ def login(request):
 			user = authenticate(email=email, password=password)
 			if user is not None:
 				django_auth_login(request, user)
+				if user.is_admin:
+					return landing_page_admin(request)
 				return landing_page_pn(request)
 			else:
 				print("mal user")
