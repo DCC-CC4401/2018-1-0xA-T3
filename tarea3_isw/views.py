@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm
-from .models import Article, ArticleLoan
+from .models import Article, ArticleLoan, PlaceReservation
 from .db_utils import any_article_id, get_article_by_id
 
 from .states import *
@@ -188,7 +188,15 @@ def landing_page_pn_espacios(request):
 @login_required
 def perfil_usuario_dueno(request):
 	template = loader.get_template('perfil_usuario_dueno.html')
+	article_history = ArticleLoan.objects.filter(user=request.user) \
+		                  .order_by('-init_date')[:10]
+
+	place_history = PlaceReservation.objects.filter(user=request.user) \
+		                .order_by('-init_date')[:10]
+
 	context = {
+		'article-history': article_history,
+		'place-history': place_history
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
@@ -261,18 +269,5 @@ def create_article(request):
 		'form': CreateArticleForm()
 	}
 	context = {**context, **common_context_logged(request)}
-
-	return HttpResponse(template.render(context, request))
-
-
-@login_required
-def show_last_ten_article_loans(request):
-	article_history = ArticleLoan.objects.filter(user=request.user) \
-		        .order_by(ArticleLoan.init_date)[:10]
-
-	template = loader.get_template('perfil_usuario_dueno.html')
-	context = {
-		'article-history': article_history
-	}
 
 	return HttpResponse(template.render(context, request))

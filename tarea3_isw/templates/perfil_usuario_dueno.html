@@ -7,53 +7,60 @@
             type="button" value="Pide Tu Artículo" align="right">
     </div>
 
-    <div>
+    <div align="center">
         {#    Elegir tabs de reserva o prestamo#}
-        <input type="button" value="Reservas" align="left"/> <input
-            type="button" value="Préstamos" align="right">
+        <input type="button" value="Préstamos" align="right" onclick="displayArticleHistory()"> <input type="button" value="Reservas" align="left" onclick="displayPlaceHistory()"/>
     </div>
 
-    <div>
+    <div id="history">
         <!-- Tabs con prestamos/reservas pasadas-->
-        <table id="history">
-            <td id="article-history">
-                <tr>
+        <div id="article-history" align="center">
+        <p>Préstamos</p>
+            <table style="float: left">
+                <td>
                     {% for article in article_history %}
                         <tr>
                             {{ article.name }}
                         </tr>
                     {% endfor %}
-                </tr>
-            </td>
+                </td>
+            </table>
+        </div>
 
-            <td id="place-history" style="display: none">
-                <tr>
+        <div id="place-history" align="center" style="display: none">
+        <p>Reservas</p>
+            <table style="float: right">
+                <td>
                     {% for place in place_history %}
                         <tr>
                             {{ place.name }}
                         </tr>
                     {% endfor %}
-                </tr>
-            </td>
+                </td>
+            </table>
+        </div>
 
-            <td id="history-details">
+        <div id="history-details">
+            <table>
+                <td>
 
-            </td>
-        </table>
+                </td>
+            </table>
+        </div>
     </div>
 
     <script>
-    var art_hist = document.getElementById("article-history");
-    var place_hist = document.getElementById("place-history");
+        var art_hist = document.getElementById("article-history");
+        var place_hist = document.getElementById("place-history");
 
-    function displayArticleHistory(){
-        place_hist.style.display = "none";
-        art_hist.style.display = "block";
-    }
+        function displayArticleHistory() {
+            place_hist.style.display = "none";
+            art_hist.style.display = "block";
+        }
 
-    function displayPlaceHistory() {
-        art_hist.style.display = "none";
-        place_hist.style.display = "block";
-    }
+        function displayPlaceHistory() {
+            art_hist.style.display = "none";
+            place_hist.style.display = "block";
+        }
     </script>
 {% endblock %}
