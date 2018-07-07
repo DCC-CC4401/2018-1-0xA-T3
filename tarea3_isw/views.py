@@ -136,12 +136,10 @@ def landing_page_pn_articulos(request):
 		n = 0
 		set = []
 
-		# TODO consultas de nombres similares (mayuscula/minuscula, tildes, parecidos, etc)
 		if form.is_valid():
 			try:
 				for item in Article.objects.filter(
 						name__icontains=form.cleaned_data['name']):
-					n += 1
 					if n == 5:
 						query.append(set)
 						set = []
@@ -158,6 +156,7 @@ def landing_page_pn_articulos(request):
 						continue
 
 					set.append(item)
+					n += 1
 
 				# Se agregan los items que sobren, si no llegan a 5
 				if n != 0:

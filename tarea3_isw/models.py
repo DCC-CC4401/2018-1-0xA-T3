@@ -26,7 +26,7 @@ class Article(models.Model):
 	type = models.CharField(max_length=32)
 
 	def get_url(self):
-		return ""
+		return "ficha-articulo/" + self.name + "?id_" + str(self.id) + "/"
 
 
 class Place(models.Model):
