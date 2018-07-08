@@ -37,23 +37,24 @@
     <br>
 
     {% if query|length != 0 %}
-        <div id="query-table">
+        <div id="query-table" align="center">
             <table id="results" width="100%">
                 {% for set in query %}
                     {#            Cada set tiene 5 items#}
                     <tr>
                         {% for item in set %}
                             <td>
-                                <div id="article-box"
-                                     style="background-color: black; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 25px; text-align: center; width: 200px; height: 240px; margin-right: 15px">
-                                    <div style="width: 100%; height: 85%">
-                                        <img src="{{ item.image.url }}"
-                                             style="width: 100%; height: 90%"
-                                             href="{{ item.get_url }}"
-                                             alt="{{ item.name }}">
+                                <a href="/{{ item.get_url }}">
+                                    <div id="article-box"
+                                         style="background-color: black; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 25px; text-align: center; width: 200px; height: 240px; margin-right: 15px">
+                                        <div style="width: 100%; height: 85%">
+                                            <img src="{{ item.image.url }}"
+                                                 style="width: 100%; height: 90%"
+                                                 alt="{{ item.name }}">
+                                        </div>
+                                        <p style="color: white">{{ item.name }}</p>
                                     </div>
-                                    <p style="color: white">{{ item.name }}</p>
-                                </div>
+                                </a>
                             </td>
                         {% endfor %}
                     </tr>
