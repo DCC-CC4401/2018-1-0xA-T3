@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm
-from .models import Article, ArticleLoan, PlaceReservation
+from .models import Article, ArticleLoan, PlaceReservation, User
 from .db_utils import any_article_id, get_article_by_id
 
 from .states import *
@@ -90,7 +90,10 @@ def landing_page_admin(request):
 @login_required
 def landing_page_admin_usuarios(request):
 	template = loader.get_template('landing_page_admin/usuarios.html')
+
+	all_Users = User.objects.all()
 	context = {
+        'all_Users': all_Users
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))

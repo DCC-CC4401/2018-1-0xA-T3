@@ -4,9 +4,11 @@
 {% extends 'base.html' %}
 
 {% load static %}
+
 {% block css_content %}
         <link rel="stylesheet" href="{% static "css/sideviewadmin.css" %}">
 {% endblock %}
+
 <!-- el html de esta pagina en especifico -->
 {% block content %}
 
@@ -34,10 +36,15 @@
 
     <div align="left" class="sidenav">
     <!-- gestion de usuarios, espacios y articulos -->
-        <a href="usuarios"> <img src="{% static "images/user.jpg"%}" height="42" width="42" alt="Usuarios"> </a>
-        <a href="articuloespacio"> <img src="{% static "images/shoppingcart.png"%}" height="42" width="42" alt="Articulos y espacios"> </a>
-        <a href="grilla"> <img src="{% static "images/clock.svg"%}" height="42" width="42" alt="Grilla"> </a>
+        <a href="/landing-page-admin/usuarios"> <img src="{% static "images/user.jpg"%}" height="42" width="42" alt="Usuarios"> </a>
+        <a href="/landing-page-admin/articuloespacio"> <img src="{% static "images/shoppingcart.png"%}" height="42" width="42" alt="Articulos y espacios"> </a>
+        <a href="/landing-page-admin/grilla"> <img src="{% static "images/clock.svg"%}" height="42" width="42" alt="Grilla"> </a>
 
     </div>
+
+    {% block el_Contenido %}
+    {% endblock %}
+
+
 
 {% endblock %}

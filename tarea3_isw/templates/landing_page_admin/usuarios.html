@@ -1,1 +1,93 @@
 {% extends '../landing_page_admin.html' %}
+
+{% load static %}
+
+{% block el_Contenido %}
+
+    <style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+</style>
+
+<table>
+
+    <tr>
+        <td>
+            Id
+        </td>
+        <td>
+            Nombre
+        </td>
+        <td>
+            Apellido
+        </td>
+        <td>
+            Rut
+        </td>
+
+        <td>
+            Correo
+        </td>
+
+        <td>
+            Estado
+        </td>
+        <td>
+            <img src="{% static "images/addicon.png"%}" height="21" width="21" alt="Añadir">
+        </td>
+
+    </tr>
+    {% for User in all_Users %}
+        <tr>
+
+            <td>
+                {{ User.id }}
+            </td>
+
+            <td>
+                {{ User.first_name }}
+            </td>
+
+            <td>
+                {{ User.last_name }}
+            </td>
+
+            <td>
+                {{ User.rut }}
+            </td>
+
+            <td>
+                {{ User.email }}
+            </td>
+
+            {% if User.is_enabled == 1  %}
+            <td>
+               <font color="#32cd32">Habilitado</font>
+            </td>
+                {% else %}
+                <td>
+                    <font color="red">Deshabilitado</font>
+                </td>
+
+            {% endif %}
+
+            <td>
+                <img src="{% static "images/editicon.png"%}" height="21" width="21" alt="Editar">
+                <img src="{% static "images/deleteicon.png"%}" height="21" width="21" alt="Borrar">
+            </td>
+
+    </tr>
+
+    {% endfor %}
+</table>
+
+{% endblock %}
