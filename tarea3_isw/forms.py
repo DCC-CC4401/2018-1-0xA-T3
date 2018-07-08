@@ -58,12 +58,12 @@ class CreateArticleForm(forms.Form):
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
 	type = forms.CharField(widget=forms.Select(
-	                       choices=[("none", "Tipo"),
+	                       choices=[("none", "Estado"),
 	                             ("Disponible", "Disponible"),
 	                             ("Prestado", "Prestado"),
 	                             ("En Reparación", "En Reparación"),
 	                             ("Perdido", "Perdido")]), label="Estado")
-	state = forms.CharField(widget=forms.Select(choices=[("none", "Estado")]),
+	state = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
 	                        label="Tipo")
 
 	def __init__(self, *args, **kwargs):

@@ -87,6 +87,7 @@ def ficha_articulo(request, article_name, article_id):
 def landing_page_admin(request):
 	return HttpResponseRedirect('/landing-page-admin/usuarios')
 
+
 @login_required
 def landing_page_admin_usuarios(request):
 	template = loader.get_template('landing_page_admin/usuarios.html')
@@ -95,6 +96,7 @@ def landing_page_admin_usuarios(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+
 @login_required
 def landing_page_admin_articuloespacio(request):
 	template = loader.get_template('landing_page_admin/articuloespacio.html')
@@ -102,6 +104,7 @@ def landing_page_admin_articuloespacio(request):
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
+
 
 @login_required
 def landing_page_admin_grilla(request):
@@ -127,14 +130,17 @@ def landing_page_pn_articulos(request):
 		'after_query': False  # Para saber cuando ya se hizo una consulta
 	}
 
+	query = []
+	n = 0
+	set = []
+
+	articles = []
+
 	# Maneja las request de busqueda
 	if request.method == 'POST':
 		form = SearchForm(request.POST)
 
 		# Articulos se agrupan de a 5 para facilitar el orden en el html
-		query = []
-		n = 0
-		set = []
 
 		if form.is_valid():
 			try:
@@ -162,12 +168,25 @@ def landing_page_pn_articulos(request):
 				if n != 0:
 					query.append(set)
 
+				context['after_query'] = True
+
 			except ValueError:
 				# No items found
 				pass
 
-		context['after_query'] = True
-		context['query'] = query
+	else:
+		for item in Article.objects.all():
+			set.append(item)
+			n += 1
+			if n == 5:
+				query.append(set)
+				n = 0
+				set = []
+
+		if n != 0:
+			query.append(set)
+
+	context['query'] = query
 
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
