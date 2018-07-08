@@ -75,7 +75,22 @@ class SearchForm(forms.Form):
 		             'placeholder': 'Búsqueda...'})
 
 
-class AskArticleLoanForm(forms.Form):
-	init_date = forms.DateTimeField(required=True)
-	end_date = forms.DateTimeField(required=True)
+class AskArticleLoanForm(forms.ModelForm):
+	#init_date = forms.DateTimeField(required=True)
+	#end_date = forms.DateTimeField(required=True)
+	class Meta:
+		model = ArticleLoan
+		fields = ['init_date', 'end_date']
+		widgets = {
+			'init_date': forms.TextInput(attrs={
+				'class': 'ask-art-date'
+			}),
+			'end_date': forms.TextInput(attrs={
+				'class': 'ask-art-date'
+			})
+		}
+		labels = {
+			'init_date': 'Fecha de inicio',
+			'end_date': u'Fecha de término'
+		}
 
