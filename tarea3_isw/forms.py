@@ -72,7 +72,7 @@ class SearchForm(forms.Form):
 			.update({'id': 'searchbar',
 		             'class': 'search-bar-container-input',
 		             'type': 'text',
-		             'placeholder': 'Búesqueda...'})
+		             'placeholder': 'Búsqueda...'})
 
 
 class AskArticleLoanForm(forms.Form):
