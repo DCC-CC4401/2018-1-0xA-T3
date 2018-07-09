@@ -1,5 +1,120 @@
 {% extends '../landing_page_admin.html' %}
 
+{% load static %}
+{% load utilidades %}
 {% block el_Contenido %}
+
+    <style>
+table {
+    border-collapse: collapse;
+    float: left;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+</style>
+
+    <font size="18">Artículos &nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp;	&nbsp; Espacios</font>
+<table>
+
+    <tr>
+        <td>
+            Id
+        </td>
+        <td>
+            Producto
+        </td>
+        <td>
+            Estado
+        </td>
+        <td>
+            <a href="/create-article/"><img src="{% static "images/addicon.png"%}" height="21" width="21" alt="Añadir"></a>
+        </td>
+
+        <td>
+            <img src="{% static "images/blank.jpg"%}" height="15" width="150" alt="nada">
+        </td>
+
+
+    </tr>
+    {% for art in all_Articulos %}
+        <tr>
+
+            <td>
+                {{ art.id }}
+            </td>
+
+            <td>
+                {{ art.name }}
+            </td>
+
+            <td>
+                {% GetStateA art.state %}
+            </td>
+
+            <td>
+               <form action="{% url 'deletearticle' art.id%}" method="post">
+            {% csrf_token %}
+             <input type="image" src="{% static "images/deleteicon.png"%}" height="21" width="21"  alt="Borrar" />
+                </form>
+            </td>
+
+    </tr>
+
+    {% endfor %}
+
+<span style="padding-left:20px">
+</table>
+
+
+    <table>
+
+    <tr>
+        <td>
+            Id
+        </td>
+        <td>
+            Espacio
+        </td>
+        <td>
+            Estado
+        </td>
+        <td>
+            <img src="{% static "images/addicon.png"%}" height="21" width="21" alt="Añadir">
+        </td>
+
+
+    </tr>
+    {% for esp in all_Espacios %}
+        <tr>
+
+            <td>
+                {{ esp.id }}
+            </td>
+
+            <td>
+                {{ esp.name}}
+            </td>
+
+            <td>
+                {% GetStateSp esp.state %}
+            </td>
+
+             <td>
+               <form action="{% url 'deletespace' esp.id%}" method="post">
+            {% csrf_token %}
+             <input type="image" src="{% static "images/deleteicon.png"%}" height="21" width="21"  alt="Borrar" />
+                </form>
+            </td>
+
+
+    </tr>
+
+    {% endfor %}
+</table>
 
 {% endblock %}

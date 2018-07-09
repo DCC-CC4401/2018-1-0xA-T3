@@ -19,6 +19,8 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
 
     path('create-article/', views.create_article, name='create_article'),
+    path('deletearticle/<int:Article_id>', views.deletearticle, name='deletearticle'),
+    path('deletespace/<int:Space_id>', views.deletespace, name='deletespace'),
 
     path('dyn_styles/', views.dyn_styles, name='dyn_styles')
 ]

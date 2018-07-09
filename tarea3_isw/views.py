@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm
-from .models import Article, ArticleLoan, PlaceReservation, User
+from .models import Article, ArticleLoan, PlaceReservation, User, Place
 from .db_utils import any_article_id, get_article_by_id
 
 from .states import *
@@ -47,6 +47,24 @@ def dyn_styles(request):
 
 def urlify_name(name):
 	return re.sub(r'\s+', '-', name).lower()
+
+def deletearticle(request, Article_id):
+
+    if (request.method == 'POST'):
+        malditoitem = Article.objects.get(pk = Article_id )
+        malditoitem.delete()
+        return HttpResponseRedirect('/landing-page-admin/articuloespacio')
+    else:
+        return render(request, '/landing_page_admin/articuloespacio.html')
+
+def deletespace(request, Space_id):
+
+	if (request.method == 'POST'):
+		malditoitem = Place.objects.get(pk=Space_id)
+		malditoitem.delete()
+		return HttpResponseRedirect('/landing-page-admin/articuloespacio')
+	else:
+		return render(request, '/landing_page_admin/articuloespacio.html')
 
 
 @login_required
@@ -101,7 +119,12 @@ def landing_page_admin_usuarios(request):
 @login_required
 def landing_page_admin_articuloespacio(request):
 	template = loader.get_template('landing_page_admin/articuloespacio.html')
+	all_Articulos = Article.objects.all()
+	all_Espacios = Place.objects.all()
+
 	context = {
+		'all_Articulos' : all_Articulos,
+		'all_Espacios'  : all_Espacios
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
