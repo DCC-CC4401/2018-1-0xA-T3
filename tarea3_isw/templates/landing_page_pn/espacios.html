@@ -1,7 +1,7 @@
 {% extends '../landing_page_pn.html' %}
+{% load static %}
 {% block cond_art_esp %}
-    Espacios
-
+    <div id="schedule-espacio-demo"></div>
     <div id="calendar" align="center">
 
     </div>
@@ -40,4 +40,7 @@
         </tr>
     </table>
     </div>
+{% endblock %}
+{% block extra_js %}
+     <script src="{% static "js/grilla.js" %}"></script>
 {% endblock %}
