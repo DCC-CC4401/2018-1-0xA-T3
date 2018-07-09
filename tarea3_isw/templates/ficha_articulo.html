@@ -1,56 +1,73 @@
 {% extends 'base.html' %}
-{% block content %}
+{% load static %}
 
-    <div id="article-info">
-    <table width="50%" style="float: left">
-        <tr>
-            <th>
-                <!-- Nombre articulo-->
-                {{ article.name }}
-            </th>
-            <th>
-                <!-- Estado articulo-->
-                {{ article.state }}
-            </th>
-        </tr>
+{% block css_content %}
+    <link rel="stylesheet" href="{% static "external/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css"%}">
+    <link rel="stylesheet" href="{% static "css/ficha_articulo.css"%}">
 
-        <tr>
-            <th>
-                <!-- Imagen articulo-->
-                <img src="{{ article.photo }}" alt="{{ article.name }}"
-                     width="256" height="200">
-                <br>
-            </th>
-        </tr>
-
-        <tr>
-            <th>
-                <!-- Descripcion articulo-->
-                <textarea cols="55" style="resize: none; float: inherit" readonly >
-                            {{ article.desc }}
-                        </textarea>
-            </th>
-        </tr>
-    </table>
-    &emsp;
-
-    <table width="30%" style="float: left">
-        <tr>
-            <th>
-                <!-- Solicitar reserva-->
-                <h2>Solicitar Reserva</h2>
-
-            </th>
-        </tr>
-
-        <tr>
-            <th>
-                <!-- Historial reservas-->
-                <h2>Historial de Reservas</h2>
-
-            </th>
-        </tr>
-    </table>
-    </div>
 {% endblock %}
 
+{% block extra_js %}
+    <script src="{% static "external/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js" %}"></script>
+    <script src="{% static "js/ficha-articulo.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+    <!--
+    <ul>
+        <li>Nombre articulo: {{ article.name }}</li>
+        <li>Id : {{ article.id }}</li>
+        <li>Descripcion : {{ article.desc }}</li>
+        <li>Estado : {{ article.state }}</li>
+        <li>Tipo : {{ article.type }}</li>
+    </ul>
+    -->
+    <div class="f-art-full-container">
+        <div class="f-art-left-container">
+            <div class="f-art-left-top-float">
+                <div class="f-art-article-align-left-top f-art-article-name-header ">{{ article.name }}</div>
+                <div class="f-art-article-align-left-top f-art-article-state-common {{ article_state_css }}">&lt; {{ article_state }}</div>
+            </div>
+            <div class="f-art-image">
+                <img src="{{ article.image.url }}">
+            </div>
+            <div class="f-art-desc">
+                {{ article.desc }}
+            </div>
+        </div>
+        <div class="f-art-right-container">
+            <div class="f-art-datetimepicker">
+                <span class="f-art-right-container-header">Solicitar Reserva</span>
+                <form action="" method="post" class="form" autocomplete="off">
+                    {% csrf_token %}
+                    <table class="f-art-enter-dates-table">
+                        <tr>
+                            <td>Desde</td>
+                            <td>{{ form.init_date }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Hasta</td>
+                            <td>{{ form.end_date }}</td>
+                            <td></td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td> <button type="submit" class="f-art-enter-dates-submit">Pedir</button></td>
+                        </tr>
+                    </table>
+
+
+                </form>
+                {{ error_msg }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block footer_js %}
+    <script>
+        fichaArticulo.notifyIfRequestDone({{ article_loan_requested }});
+    </script>
+{% endblock %}

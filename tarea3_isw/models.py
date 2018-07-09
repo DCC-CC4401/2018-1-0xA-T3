@@ -5,40 +5,54 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 
 from .managers import UserManager
+from .states import *
+
+import os
+from django.conf import settings
 # Create your models here.
+
+
+def article_image_path(instance, filename):
+	return os.path.join(settings.ARTICLES_IMAGES_DIRECTORY_NAME, str(instance.id), filename)
 
 
 class Article(models.Model):
 	name = models.CharField(max_length=255)
-	id = models.CharField(max_length=32, primary_key=True)
 	desc = models.CharField(max_length=1024)
-	#photo = models.ImageField()
-	state = models.ExpressionList("Disponible", "Prestado", "En reparación", "Perdido")
+	image = models.ImageField(upload_to=article_image_path, blank=True, null=True)
+	state = models.IntegerField(default=int(ArticleStates.AVAILABLE))
 	type = models.CharField(max_length=32)
 
+	def get_url(self):
+		return "ficha-articulo/" + "id_" + str(self.id) + "/"
 
-class Espacio(models.Model):
+
+class Place(models.Model):
 	name = models.CharField(max_length=255)
-	id = models.CharField(max_length=32, primary_key=True)
 	desc = models.CharField(max_length=1024)
 	#photo = models.ImageField()
-	state = models.ExpressionList("Disponible", "Prestado", "En reparación")
+	state = models.IntegerField(default=int(PlaceStates.AVAILABLE))
+
+	def get_url(self):
+		return ""
 
 
-class Prestamo(models.Model):
-	article = Article()
+class ArticleLoan(models.Model):
+	article = models.ForeignKey('Article', on_delete=models.CASCADE)
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
-	state = models.ExpressionList("En proceso", "Aprobado", "Rechazado", "Caducado", "Finalizado")
+	state = models.IntegerField(default=int(LoanStates.PROCESSING))
+	user = models.ForeignKey('User', on_delete=models.CASCADE)
 
 
-class Reserva(models.Model):
-	espacio = Espacio()
+class PlaceReservation(models.Model):
+	espacio = models.ForeignKey('Place', on_delete=models.CASCADE)
 	init_date = models.DateTimeField()
 	end_date = models.DateTimeField()
-	state = models.ExpressionList("En proceso", "Aprobada", "Rechazada", "Finalizada")
+	state = models.IntegerField(default=int(ReservationStates.PROCESSING))
+	user = models.ForeignKey('User', on_delete=models.CASCADE)
 
-
+# SEARCH TYPES
 class Types(models.Model):
 	type = models.CharField(max_length=32, primary_key=True, default='none')
 
@@ -51,7 +65,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 	date_joined = models.DateTimeField('Fecha de registro', auto_now_add=True)
 	is_active = models.BooleanField('Activo', default=True)
 	is_enabled = models.BooleanField('Habilitado', default=True)
-
 	is_admin = models.BooleanField('Es admin', default=False)
 
 	objects = UserManager()
