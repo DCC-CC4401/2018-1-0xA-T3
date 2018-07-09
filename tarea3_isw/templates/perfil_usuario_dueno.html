@@ -1,17 +1,71 @@
 {% extends 'base.html' %}
 {% block content %}
     {# aqui va el html especifico #}
-    <div id="solicitudes">
-{#    Botones para reservar espacio y pedir articulo #}
-    <input type="button" value="Reserva Tu Espacio" align="left"/> <input type="button" value="Pide Tu Artículo" align="right">
+
+    <div class="row-element">
+    <ul class="horiz-tab">
+        <li class="{{ class_articulos }}"><a href="/landing-page-pn/articulos">Pide Tu Artículo</a></li>
+        <li class="{{ class_espacios }}"><a href="/landing-page-pn/espacios">Reserva Tu Espacio</a></li>
+    </ul>
     </div>
 
     <div>
 {#    Elegir tabs de reserva o prestamo#}
-    <input type="button" value="Reserva" align="left"/> <input type="button" value="Préstamos" align="right">
+    <input type="button" value="Reserva" align="center"/><input type="button" value="Préstamos" align="center">
+    <table style="width:50%">
+        {% for prest in things %}
+            <tr>
+                <td><form action="{%  url 'delete'  %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
+                    <input type="submit" value="Delete">
+                </form></td>
+                <td>{{ thing.name }}</td>
+                <td><form action="{%  url 'less'  %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
+                    <input type="submit" name="{{ thing.name }}" value="less">
+                </form></td>
+                <td>{{ thing.counts }}</td>
+                <td><form action="{%  url 'more'  %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
+                    <input type="submit" name="{{ thing.name }}" value="more">
+                </form></td>
+            </tr>
+        {% endfor %}
+    </table>
     </div>
 
-    <div id="schedule-demo">
-    <!-- Tabs con prestamos/reservas pasadas-->
+    <div>
+    <input type="button" value="Préstamos" align="center">
+    <table style="width:50%">
+        {% for thing in things %}
+            <tr>
+                <td><form action="{%  url 'delete'  %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
+                    <input type="submit" value="Delete">
+                </form></td>
+                <td>{{ thing.name }}</td>
+                <td><form action="{%  url 'less'  %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
+                    <input type="submit" name="{{ thing.name }}" value="less">
+                </form></td>
+                <td>{{ thing.counts }}</td>
+                <td><form action="{%  url 'more'  %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
+                    <input type="submit" name="{{ thing.name }}" value="more">
+                </form></td>
+            </tr>
+        {% endfor %}
+    </table>
     </div>
+
+
+    {# <div id="schedule-demo"> #}
+    <!-- Tabs con prestamos/reservas pasadas-->
+    {# </div> #}
 {% endblock %}
