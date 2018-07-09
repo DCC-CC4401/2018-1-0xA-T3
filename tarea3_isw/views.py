@@ -67,6 +67,10 @@ def deletespace(request, Space_id):
 		return render(request, '/landing_page_admin/articuloespacio.html')
 
 
+def urlify_article_id(id):
+	return '/ficha-articulo/id_%s' % str(id)
+
+
 @login_required
 def ficha_articulo(request, article_name, article_id):
 	print("Article name:  ", article_name, " -- Article Id:  ", article_id)
@@ -82,19 +86,30 @@ def ficha_articulo(request, article_name, article_id):
 	article = get_article_by_id(article_id)
 
 	if article is None:
+		print("Article not found")
 		return invalid_page()
 
 	url_article_name = urlify_name(article.name)
 
 	if article_name is None or url_article_name != article_name:
+		print("redirecting!!!")
 		return redirect(
 			'/ficha-articulo/%s/id_%s' % (url_article_name, article_id))
+
+	error_msg = ''
+	article_loan_requested = False
+	if request.method == 'POST':
+		error_msg = ask_article_loan(request, article_id)
+		article_loan_requested = len(error_msg) == 0
+
 
 	context = {
 		'article': article,
 		'article_state': str(ArticleStates(article.state)),
 		'article_state_css': ArticleStates(article.state).get_css_name(),
-		'form': AskArticleLoanForm()
+		'form': AskArticleLoanForm(),
+		'error_msg': error_msg,
+		'article_loan_requested': article_loan_requested
 	}
 	context = {**context, **common_context_logged(request)}
 
@@ -104,6 +119,7 @@ def ficha_articulo(request, article_name, article_id):
 @login_required
 def landing_page_admin(request):
 	return HttpResponseRedirect('/landing-page-admin/usuarios')
+
 
 @login_required
 def landing_page_admin_usuarios(request):
@@ -115,6 +131,7 @@ def landing_page_admin_usuarios(request):
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
+
 
 @login_required
 def landing_page_admin_articuloespacio(request):
@@ -128,6 +145,7 @@ def landing_page_admin_articuloespacio(request):
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
+
 
 @login_required
 def landing_page_admin_grilla(request):
@@ -150,24 +168,25 @@ def landing_page_pn_articulos(request):
 		'class_articulos': 'active',
 		'class_espacios': '',
 		'form': SearchForm(),
-		'after_query': False  # Para saber cuando ya se hizo una consulta
+		'after_query': False,  # Para saber cuando ya se hizo una consulta
 	}
+
+	query = []
+	n = 0
+	set = []
+
+	articles = []
 
 	# Maneja las request de busqueda
 	if request.method == 'POST':
 		form = SearchForm(request.POST)
 
 		# Articulos se agrupan de a 5 para facilitar el orden en el html
-		query = []
-		n = 0
-		set = []
 
-		# TODO consultas de nombres similares (mayuscula/minuscula, tildes, parecidos, etc)
 		if form.is_valid():
 			try:
 				for item in Article.objects.filter(
 						name__icontains=form.cleaned_data['name']):
-					n += 1
 					if n == 5:
 						query.append(set)
 						set = []
@@ -184,17 +203,31 @@ def landing_page_pn_articulos(request):
 						continue
 
 					set.append(item)
+					n += 1
 
 				# Se agregan los items que sobren, si no llegan a 5
 				if n != 0:
 					query.append(set)
 
+				context['after_query'] = True
+
 			except ValueError:
 				# No items found
 				pass
 
-		context['after_query'] = True
-		context['query'] = query
+	else:
+		for item in Article.objects.all():
+			set.append(item)
+			n += 1
+			if n == 5:
+				query.append(set)
+				n = 0
+				set = []
+
+		if n != 0:
+			query.append(set)
+
+	context['query'] = query
 
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
@@ -297,3 +330,18 @@ def create_article(request):
 	context = {**context, **common_context_logged(request)}
 
 	return HttpResponse(template.render(context, request))
+
+
+def ask_article_loan(request, article_id):
+	error_msg = ''
+	if request.method == 'POST':
+		form = AskArticleLoanForm(request.POST)
+		if form.is_valid():
+			post = form.save(commit=False)
+			post.article = get_article_by_id(article_id)
+			post.user = request.user
+			post.save()
+		else:
+			error_msg = form.errors
+
+	return error_msg

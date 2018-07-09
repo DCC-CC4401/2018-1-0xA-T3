@@ -1,72 +1,92 @@
 {% extends '../landing_page_pn.html' %}
+{% load static %}
+{% block css_content %}
+    <link rel="stylesheet" href="{% static "css/landing_page_pn_articulo.css" %}?xx={{ random_val }}">
+{% endblock %}
 {% block cond_art_esp %}
 
     <form method="POST" action="">
         {% csrf_token %}
 
-    <div class="row-element">
-        <div class="search-bar-container">
-            <i class="fa fa-search search-icon-custom"></i>
-            {{ form.name }}
-            <div class="search-button"><a href="#" onclick="$(this).closest('form').submit()">Buscar</a></div>
-        </div>
-    </div>
-
-    <div id="advanced-options" class="row-element" style="display: none; max-width: 200px; margin-left: auto; margin-right: auto">
-        <div id="advanced-options" class="row-element" style="float: left">
-            {{ form.type }}
+        <div class="row-element">
+            <div class="search-bar-container">
+                <i class="fa fa-search search-icon-custom"></i>
+                {{ form.name }}
+                <div class="search-button"><a href="#"
+                                              onclick="$(this).closest('form').submit()">Buscar</a>
+                </div>
+            </div>
         </div>
 
-        <div id="disponibility-select" style="float: right">
-            {{ form.state }}
+        <div id="advanced-options" class="row-element"
+             style="display: none; max-width: 200px; margin-left: auto; margin-right: auto">
+            <div id="advanced-options" class="row-element" style="float: left">
+                {{ form.type }}
+            </div>
+
+            <div id="disponibility-select" style="float: right">
+                {{ form.state }}
+            </div>
         </div>
-    </div>
     </form>
 
     <div class="row-element">
         <div class="advanced-search">
-            <button id="search-mode" onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
+            <button id="search-mode" onclick="toggleAdvancedSearch()">
+                Búsqueda Avanzada
+            </button>
         </div>
     </div>
     <br>
 
     {% if query|length != 0 %}
-         <table id="results" width="80%">
-            {% for set in query %}
-    {#            Cada set tiene 5 items#}
-            <tr>
-                {% for item in set %}
-                <td>
-                    <!-- Representacion item-->
-{#    TODO presentacion articulos#}
-                        <img src="{{ item.photo }}" href="{{ item.get_url }}" width="64" height="64" alt="{{ item.name }}">
-                        <text>{{ item.name }}</text>
-                </td>
+        <div id="query-table" align="center">
+            <table id="results" width="100%" >
+                {% for set in query %}
+                    {#            Cada set tiene 5 items#}
+                    <tr>
+                        {% for item in set %}
+                            <td>
+                                <div class="article-box-container">
+                                    <a href="/{{ item.get_url }}" class="article-box-link">
+                                    <div class="article-box">
+                                        <div class="article-box-inside">
+                                            <img src="{{ item.image.url }}"
+                                                 class="article-box-inside-img"
+                                                 alt="{{ item.name }}">
+                                        </div>
+                                        <p class="article-box-name">{{ item.name }}</p>
+                                    </div>
+                                    </a>
+                                </div>
+                            </td>
+
+                        {% endfor %}
+                    </tr>
                 {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
+            </table>
+        </div>
     {% elif after_query %}
-{#        Caso query retorna vacio#}
+        {#        Caso query retorna vacio#}
         <p>No se encontró ninguna conicidencia</p>
     {% endif %}
 
 
     <script>
-    function toggleAdvancedSearch() {
-        var options = document.getElementById("advanced-options");
-        var btn = document.getElementById("search-mode");
-        var type = document.getElementById("type-select");
-        var disponibility = document.getElementById("disponibility-select");
-        if (options.style.display === "none") {
-            options.style.display = "block";
-            btn.textContent = "Búsqueda Simple";
-        } else {
-            options.style.display = "none";
-            btn.textContent = "Búsqueda Avanzada";
-            type.getElementsByTagName('option')[0].selected = 'selected';
-            disponibility.getElementsByTagName('option')[0].selected = 'selected';
+        function toggleAdvancedSearch() {
+            var options = document.getElementById("advanced-options");
+            var btn = document.getElementById("search-mode");
+            var type = document.getElementById("type-select");
+            var disponibility = document.getElementById("disponibility-select");
+            if (options.style.display === "none") {
+                options.style.display = "block";
+                btn.textContent = "Búsqueda Simple";
+            } else {
+                options.style.display = "none";
+                btn.textContent = "Búsqueda Avanzada";
+                type.getElementsByTagName('option')[0].selected = 'selected';
+                disponibility.getElementsByTagName('option')[0].selected = 'selected';
+            }
         }
-    }
     </script>
 {% endblock %}

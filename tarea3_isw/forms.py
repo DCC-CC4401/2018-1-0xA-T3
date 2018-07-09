@@ -58,12 +58,12 @@ class CreateArticleForm(forms.Form):
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
 	type = forms.CharField(widget=forms.Select(
-	                       choices=[("none", "Tipo"),
+	                       choices=[("none", "Estado"),
 	                             ("Disponible", "Disponible"),
 	                             ("Prestado", "Prestado"),
 	                             ("En Reparación", "En Reparación"),
 	                             ("Perdido", "Perdido")]), label="Estado")
-	state = forms.CharField(widget=forms.Select(choices=[("none", "Estado")]),
+	state = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
 	                        label="Tipo")
 
 	def __init__(self, *args, **kwargs):
@@ -72,10 +72,28 @@ class SearchForm(forms.Form):
 			.update({'id': 'searchbar',
 		             'class': 'search-bar-container-input',
 		             'type': 'text',
-		             'placeholder': 'Búesqueda...'})
+		             'placeholder': 'Búsqueda...'})
 
 
-class AskArticleLoanForm(forms.Form):
-	init_date = forms.DateTimeField(required=True)
-	end_date = forms.DateTimeField(required=True)
+SELECCIONAR_FECHA = 'Seleccione Fecha'
 
+class AskArticleLoanForm(forms.ModelForm):
+	class Meta:
+		model = ArticleLoan
+		fields = ['init_date', 'end_date']
+		exclude = ['article', 'user']
+
+		widgets = {
+			'init_date': forms.TextInput(attrs={
+				'class': 'ask-art-date',
+				'placeholder': SELECCIONAR_FECHA
+			}),
+			'end_date': forms.TextInput(attrs={
+				'class': 'ask-art-date',
+				'placeholder': SELECCIONAR_FECHA,
+			})
+		}
+		labels = {
+			'init_date': 'Desde',
+			'end_date':  'Hasta'
+		}

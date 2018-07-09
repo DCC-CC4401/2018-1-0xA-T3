@@ -13,7 +13,7 @@ def any_article_id(article_name):
 
 def get_article_by_id(_id):
 	try:
-		article = Article.objects.get(id=_id)
+		article = Article.objects.get(id=int(_id))
 	except ObjectDoesNotExist:
 		article = None
 

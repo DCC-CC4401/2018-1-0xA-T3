@@ -13,8 +13,6 @@ from django.conf import settings
 
 
 def article_image_path(instance, filename):
-	print("loading jeje : filename: %s" % filename)
-
 	return os.path.join(settings.ARTICLES_IMAGES_DIRECTORY_NAME, str(instance.id), filename)
 
 
@@ -26,7 +24,7 @@ class Article(models.Model):
 	type = models.CharField(max_length=32)
 
 	def get_url(self):
-		return ""
+		return "ficha-articulo/" + "id_" + str(self.id) + "/"
 
 
 class Place(models.Model):

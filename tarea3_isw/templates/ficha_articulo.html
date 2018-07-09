@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block css_content %}
+    <link rel="stylesheet" href="{% static "external/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css"%}">
+    <link rel="stylesheet" href="{% static "css/ficha_articulo.css"%}">
+
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "external/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js" %}"></script>
+    <script src="{% static "js/ficha-articulo.js" %}"></script>
+{% endblock %}
+
 {% block content %}
     <!--
     <ul>
@@ -23,8 +36,38 @@
             </div>
         </div>
         <div class="f-art-right-container">
-            {{ form }}
+            <div class="f-art-datetimepicker">
+                <span class="f-art-right-container-header">Solicitar Reserva</span>
+                <form action="" method="post" class="form" autocomplete="off">
+                    {% csrf_token %}
+                    <table class="f-art-enter-dates-table">
+                        <tr>
+                            <td>Desde</td>
+                            <td>{{ form.init_date }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Hasta</td>
+                            <td>{{ form.end_date }}</td>
+                            <td></td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td> <button type="submit" class="f-art-enter-dates-submit">Pedir</button></td>
+                        </tr>
+                    </table>
+
+
+                </form>
+                {{ error_msg }}
+            </div>
         </div>
     </div>
 {% endblock %}
-
+{% block footer_js %}
+    <script>
+        fichaArticulo.notifyIfRequestDone({{ article_loan_requested }});
+    </script>
+{% endblock %}
