@@ -13,37 +13,46 @@
         {#    Elegir tabs de reserva o prestamo#}
         <input type="button" value="Préstamos" align="right" onclick="displayArticleHistory()"> <input type="button" value="Reservas" align="left" onclick="displayPlaceHistory()"/>
     </div>
-    <form action="" method="post">{% csrf_token %}<button type="submit">Borrar Seleccionados</button>
     <div id="history">
         <!-- Tabs con prestamos/reservas pasadas-->
-        <div id="article-history" align="center">
-        <p>Préstamos</p>
-            <table style="float: left">
-                {% for article_loan in article_history %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" name ="todelete" value="{{ article_loan.id }}"/>
-                        </td>
-                        <td>
-                            {{ article_loan.article.name }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </form>
+            <div id="article-history" align="center">
+                <p>Préstamos</p>
+                <form action="" method="post">{% csrf_token %}<button type="submit">Borrar Seleccionados</button>
+                    <table class="table table-sm">
+                        <tbody>
+                            {% for article_loan in article_history %}
+                                <tr>
+                                    <th scope="row">
+                                        <input type="checkbox" name ="todelete" value="{{ article_loan.id }}"/>
+                                    </th>
+                                    <td>
+                                        {{ article_loan.article.name }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
 
         <div id="place-history" align="center" style="display: none">
         <p>Reservas</p>
-            <table style="float: right">
-                <td>
-                    {% for place in place_history %}
+        <form action="/perfil-usuario-dueno-espacios/" method="post">{% csrf_token %}<button type="submit">Borrar Seleccionados</button>
+            <table class="table table-sm">
+                <tbody>
+                    {% for place_res in place_history %}
                         <tr>
-                            {{ place.name }}
+                            <th scope="row">
+                                <input type="checkbox" name ="todelete" value="{{ place_res.id }}"/>
+                            </th>
+                            <td>
+                                {{ place_res.espacio.name }}
+                            </td>
                         </tr>
                     {% endfor %}
-                </td>
+                </tbody>
             </table>
+        </form>
         </div>
 
         <div id="history-details">
@@ -54,7 +63,6 @@
             </table>
         </div>
     </div>
-
     <script>
         var art_hist = document.getElementById("article-history");
         var place_hist = document.getElementById("place-history");

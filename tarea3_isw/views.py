@@ -238,6 +238,13 @@ def perfil_usuario_dueno(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+@login_required
+def perfil_usuario_dueno_espacios(request):
+    if request.method == 'POST':
+        todel = request.POST.getlist('todelete')
+        PlaceReservation.objects.filter(user=request.user, id__in=todel).delete()
+    return redirect('/perfil-usuario-dueno/')
+
 
 def login(request):
 	if request.method == 'POST':
