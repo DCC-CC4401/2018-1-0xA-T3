@@ -254,8 +254,8 @@ def perfil_usuario_dueno(request):
 		                .order_by('-init_date')[:10]
 
 	context = {
-		'article-history': article_history,
-		'place-history': place_history
+		'article_history': article_history,
+		'place_history': place_history
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
