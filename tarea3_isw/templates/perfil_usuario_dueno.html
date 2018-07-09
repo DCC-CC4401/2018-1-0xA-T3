@@ -19,13 +19,14 @@
         <div id="article-history" align="center">
         <p>Préstamos</p>
             <table style="float: left">
-                <td>
-                    {% for article in article_history %}
+
+                    {% for article_loan in article_history %}
                         <tr>
-                            {{ article.name }}
+                        <td>
+                            {{ article_loan.article.name }}
+                        </td>
                         </tr>
                     {% endfor %}
-                </td>
             </table>
         </div>
 
