@@ -13,8 +13,6 @@ from django.conf import settings
 
 
 def article_image_path(instance, filename):
-	print("loading jeje : filename: %s" % filename)
-
 	return os.path.join(settings.ARTICLES_IMAGES_DIRECTORY_NAME, str(instance.id), filename)
 
 

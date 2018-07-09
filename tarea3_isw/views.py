@@ -49,6 +49,10 @@ def urlify_name(name):
 	return re.sub(r'\s+', '-', name).lower()
 
 
+def urlify_article_id(id):
+	return '/ficha-articulo/id_%s' % str(id)
+
+
 @login_required
 def ficha_articulo(request, article_name, article_id):
 	print("Article name:  ", article_name, " -- Article Id:  ", article_id)
@@ -64,19 +68,30 @@ def ficha_articulo(request, article_name, article_id):
 	article = get_article_by_id(article_id)
 
 	if article is None:
+		print("Article not found")
 		return invalid_page()
 
 	url_article_name = urlify_name(article.name)
 
 	if article_name is None or url_article_name != article_name:
+		print("redirecting!!!")
 		return redirect(
 			'/ficha-articulo/%s/id_%s' % (url_article_name, article_id))
+
+	error_msg = ''
+	article_loan_requested = False
+	if request.method == 'POST':
+		error_msg = ask_article_loan(request, article_id)
+		article_loan_requested = len(error_msg) == 0
+
 
 	context = {
 		'article': article,
 		'article_state': str(ArticleStates(article.state)),
 		'article_state_css': ArticleStates(article.state).get_css_name(),
-		'form': AskArticleLoanForm()
+		'form': AskArticleLoanForm(),
+		'error_msg': error_msg,
+		'article_loan_requested': article_loan_requested
 	}
 	context = {**context, **common_context_logged(request)}
 
@@ -127,7 +142,7 @@ def landing_page_pn_articulos(request):
 		'class_articulos': 'active',
 		'class_espacios': '',
 		'form': SearchForm(),
-		'after_query': False  # Para saber cuando ya se hizo una consulta
+		'after_query': False,  # Para saber cuando ya se hizo una consulta
 	}
 
 	query = []
@@ -289,3 +304,18 @@ def create_article(request):
 	context = {**context, **common_context_logged(request)}
 
 	return HttpResponse(template.render(context, request))
+
+
+def ask_article_loan(request, article_id):
+	error_msg = ''
+	if request.method == 'POST':
+		form = AskArticleLoanForm(request.POST)
+		if form.is_valid():
+			post = form.save(commit=False)
+			post.article = get_article_by_id(article_id)
+			post.user = request.user
+			post.save()
+		else:
+			error_msg = form.errors
+
+	return error_msg

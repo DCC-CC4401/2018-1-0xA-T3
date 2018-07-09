@@ -6,6 +6,7 @@
     </title>
     <link rel="stylesheet" href="{% static "external/fontawesome-free-5.0.13/svg-with-js/css/fa-svg-with-js.css" %}">
     <link rel="stylesheet" href="{% static "external/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "external/animate.min.css" %}">
     <link rel="stylesheet" href="{% static "css/base.css" %}?xx={{ random_val }}">
     <link rel="stylesheet" href="/dyn_styles/">
     {% block css_content %}
@@ -71,11 +72,15 @@
  <script src="{% static "external/popper.min.js" %}"></script>
  <script src="{% static "external/bootstrap/js/bootstrap.min.js" %}"></script>
  <script src="{% static "external/fontawesome-free-5.0.13/svg-with-js/js/fontawesome-all.min.js" %}"></script>
+ <script src="{% static "external/bootstrap-notify.min.js" %}"></script>
 <!-- INTERNAL -->
  <script src="{% static "js/main.js" %}"></script>
 <!-- EXTRA -->
 {% block extra_js %}
 {% endblock %}
+{% block footer_js %}
+{% endblock %}
+
 <!-- END JAVASCRIPT INCLUDES -->
 
 </body>
