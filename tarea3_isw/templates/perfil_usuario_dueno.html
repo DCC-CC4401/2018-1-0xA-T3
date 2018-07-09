@@ -13,21 +13,25 @@
         {#    Elegir tabs de reserva o prestamo#}
         <input type="button" value="Préstamos" align="right" onclick="displayArticleHistory()"> <input type="button" value="Reservas" align="left" onclick="displayPlaceHistory()"/>
     </div>
-
+    <form action="" method="post">{% csrf_token %}<button type="submit">Borrar Seleccionados</button>
     <div id="history">
         <!-- Tabs con prestamos/reservas pasadas-->
         <div id="article-history" align="center">
         <p>Préstamos</p>
             <table style="float: left">
-                <td>
-                    {% for article in article_history %}
-                        <tr>
-                            {{ article.name }}
-                        </tr>
-                    {% endfor %}
-                </td>
+                {% for article_loan in article_history %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name ="todelete" value="{{ article_loan.id }}"/>
+                        </td>
+                        <td>
+                            {{ article_loan.article.name }}
+                        </td>
+                    </tr>
+                {% endfor %}
             </table>
         </div>
+    </form>
 
         <div id="place-history" align="center" style="display: none">
         <p>Reservas</p>

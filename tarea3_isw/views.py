@@ -227,6 +227,10 @@ def perfil_usuario_dueno(request):
 	place_history = PlaceReservation.objects.filter(user=request.user) \
 		                .order_by('-init_date')[:10]
 
+	if request.method == 'POST':
+		todel = request.POST.getlist('todelete')
+		ArticleLoan.objects.filter(user=request.user, id__in=todel).delete()
+
 	context = {
 		'article_history': article_history,
 		'place_history': place_history
