@@ -1,0 +1,17 @@
+
+.{{ ArticleStates_AVAILABLE }}  {
+    background-color: #009d0f;
+}
+
+.{{ ArticleStates_BORROWED}}{
+    background-color: #804079;
+
+}
+
+.{{ ArticleStates_REPAIRING}}{
+    background-color: #ff791f;
+}
+
+.{{ ArticleStates_LOST}}{
+    background-color: #ff0000;
+}

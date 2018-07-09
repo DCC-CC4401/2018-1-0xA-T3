@@ -9,63 +9,60 @@
     </ul>
     </div>
 
-    <div>
-{#    Elegir tabs de reserva o prestamo#}
-    <input type="button" value="Reserva" align="center"/><input type="button" value="Préstamos" align="center">
-    <table style="width:50%">
-        {% for prest in things %}
-            <tr>
-                <td><form action="{%  url 'delete'  %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
-                    <input type="submit" value="Delete">
-                </form></td>
-                <td>{{ thing.name }}</td>
-                <td><form action="{%  url 'less'  %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
-                    <input type="submit" name="{{ thing.name }}" value="less">
-                </form></td>
-                <td>{{ thing.counts }}</td>
-                <td><form action="{%  url 'more'  %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
-                    <input type="submit" name="{{ thing.name }}" value="more">
-                </form></td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div align="center">
+        {#    Elegir tabs de reserva o prestamo#}
+        <input type="button" value="Préstamos" align="right" onclick="displayArticleHistory()"> <input type="button" value="Reservas" align="left" onclick="displayPlaceHistory()"/>
     </div>
 
-    <div>
-    <input type="button" value="Préstamos" align="center">
-    <table style="width:50%">
-        {% for thing in things %}
-            <tr>
-                <td><form action="{%  url 'delete'  %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
-                    <input type="submit" value="Delete">
-                </form></td>
-                <td>{{ thing.name }}</td>
-                <td><form action="{%  url 'less'  %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
-                    <input type="submit" name="{{ thing.name }}" value="less">
-                </form></td>
-                <td>{{ thing.counts }}</td>
-                <td><form action="{%  url 'more'  %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="thing_id" value="{{thing.id}}" />
-                    <input type="submit" name="{{ thing.name }}" value="more">
-                </form></td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div id="history">
+        <!-- Tabs con prestamos/reservas pasadas-->
+        <div id="article-history" align="center">
+        <p>Préstamos</p>
+            <table style="float: left">
+                <td>
+                    {% for article in article_history %}
+                        <tr>
+                            {{ article.name }}
+                        </tr>
+                    {% endfor %}
+                </td>
+            </table>
+        </div>
+
+        <div id="place-history" align="center" style="display: none">
+        <p>Reservas</p>
+            <table style="float: right">
+                <td>
+                    {% for place in place_history %}
+                        <tr>
+                            {{ place.name }}
+                        </tr>
+                    {% endfor %}
+                </td>
+            </table>
+        </div>
+
+        <div id="history-details">
+            <table>
+                <td>
+
+                </td>
+            </table>
+        </div>
     </div>
 
+    <script>
+        var art_hist = document.getElementById("article-history");
+        var place_hist = document.getElementById("place-history");
 
-    {# <div id="schedule-demo"> #}
-    <!-- Tabs con prestamos/reservas pasadas-->
-    {# </div> #}
+        function displayArticleHistory() {
+            place_hist.style.display = "none";
+            art_hist.style.display = "block";
+        }
+
+        function displayPlaceHistory() {
+            art_hist.style.display = "none";
+            place_hist.style.display = "block";
+        }
+    </script>
 {% endblock %}

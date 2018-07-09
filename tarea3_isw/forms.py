@@ -1,11 +1,20 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from tarea3_isw.models import Article, Types, User
+
+from tarea3_isw.models import Article, Types, User, ArticleLoan
 
 
 class LoginForm(forms.Form):
 	email = forms.EmailField(required=True)
 	password = forms.CharField(widget=forms.PasswordInput(), required=True)
+
+	def __init__(self, *args, **kwargs):
+		super(LoginForm, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs\
+			.update({'placeholder': 'e-mail'})
+
+		self.fields['password'].widget.attrs\
+			.update({'placeholder': 'password'})
 
 
 class RegisterForm(UserCreationForm):
@@ -14,34 +23,77 @@ class RegisterForm(UserCreationForm):
 	last_name = forms.CharField(required=True)
 	rut = forms.CharField(required=True)
 
+	def __init__(self, *args, **kwargs):
+		super(RegisterForm, self).__init__(*args, **kwargs)
+		self.fields['email'].widget.attrs\
+			.update({'placeholder': 'Correo'})
+
+		self.fields['first_name'].widget.attrs\
+			.update({'placeholder': 'Nombre'})
+
+		self.fields['last_name'].widget.attrs\
+			.update({'placeholder': 'Apellido'})
+
+		self.fields['rut'].widget.attrs\
+			.update({'placeholder': 'Rut'})
+
+		self.fields['password1'].widget.attrs\
+			.update({'placeholder': 'Contraseña'})
+
+		self.fields['password2'].widget.attrs\
+			.update({'placeholder': 'Confirmar Contraseña'})
+
 	class Meta:
 		model = User
-		fields = ('email', 'first_name', 'last_name', 'rut', 'password1', 'password2')
+		fields = (
+			'email', 'first_name', 'last_name', 'rut', 'password1', 'password2')
+
+
+class CreateArticleForm(forms.Form):
+	name = forms.CharField(required=True)
+	desc = forms.CharField()
+	image = forms.ImageField()
 
 
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
-	type = forms.ModelMultipleChoiceField(required=False, widget=forms.CheckboxInput, queryset=Types.objects.all().values('type'))
-	state = forms.MultipleChoiceField(required=False, widget=forms.CheckboxInput, choices=("Disponible", "Prestado", "En reparación", "Perdido"))
+	type = forms.CharField(widget=forms.Select(
+	                       choices=[("none", "Estado"),
+	                             ("Disponible", "Disponible"),
+	                             ("Prestado", "Prestado"),
+	                             ("En Reparación", "En Reparación"),
+	                             ("Perdido", "Perdido")]), label="Estado")
+	state = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
+	                        label="Tipo")
 
-	def getResults(self):
-		query = []
-		n = 0
-		set = []
-		for item in Article.objects.filter(name__unaccent__lower__trigram_similar=self.name):
-			if n == 5:
-				query.append(set)
-				set = []
-				n = 0
+	def __init__(self, *args, **kwargs):
+		super(SearchForm, self).__init__(*args, **kwargs)
+		self.fields['name'].widget.attrs\
+			.update({'id': 'searchbar',
+		             'class': 'search-bar-container-input',
+		             'type': 'text',
+		             'placeholder': 'Búsqueda...'})
 
-			if self.type != 'none':
-				if item.type != self.type:
-					continue
 
-			if self.state != 'none':
-				if item.state != self.state:
-					continue
+SELECCIONAR_FECHA = 'Seleccione Fecha'
 
-			set.append(item)
+class AskArticleLoanForm(forms.ModelForm):
+	class Meta:
+		model = ArticleLoan
+		fields = ['init_date', 'end_date']
+		exclude = ['article', 'user']
 
-		return query
+		widgets = {
+			'init_date': forms.TextInput(attrs={
+				'class': 'ask-art-date',
+				'placeholder': SELECCIONAR_FECHA
+			}),
+			'end_date': forms.TextInput(attrs={
+				'class': 'ask-art-date',
+				'placeholder': SELECCIONAR_FECHA,
+			})
+		}
+		labels = {
+			'init_date': 'Desde',
+			'end_date':  'Hasta'
+		}

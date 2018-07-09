@@ -1,0 +1,107 @@
+
+
+.f-art-article-state-common{
+    height:45px;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    font-size:22px;
+    text-align:center;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.f-art-full-container{
+    width: 900px;
+}
+.f-art-left-container{
+    width: 600px;
+    /*border: 1px solid red;*/
+    height: 700px;
+    position:relative;
+    left:0px;
+    top:0px;
+}
+
+.f-art-left-top-float{
+    width: 100%;
+
+}
+.f-art-article-name-header{
+    font-size:22px;
+    color: #000000;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5px 20px 5px 20px;
+}
+.f-art-article-align-left-top{
+
+}
+
+.f-art-image{
+    margin:50px;
+    /*border: 1px dashed red;*/
+    text-align: center;
+}
+
+.f-art-image img{
+    max-width: 400px;
+    height:auto
+}
+
+.f-art-desc{
+    margin: 50px;
+    padding:20px;
+    border:2px dashed #8c8c8c;
+    border-radius: 5px;
+}
+
+.f-art-right-container{
+    width: 400px;
+    /*border: 1px solid red;*/
+    height: 700px;
+    position: relative;
+    top:-700px;
+    left: 700px;
+}
+.f-art-datetimepicker{
+    width:400px;
+    border: 1px solid #000000;
+    padding:20px;
+
+}
+
+.f-art-enter-dates-table{
+    list-style-type: none;
+    margin:20px 0 0 25px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 600;
+
+}
+.f-art-enter-dates-table ::placeholder {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 14px;
+    color: #c8c8c8
+}
+
+.f-art-enter-dates-submit{
+    width:60px;
+    height:30px;
+    margin: 10px 0 0 10px;
+
+}
+
+.ask-art-date{
+    font-size: 15px;
+    font-weight: bold;
+    width:200px;
+    height:30px;
+    text-align: center;
+}
+
+.f-art-right-container-header{
+    font-size: 22px;
+    font-weight: bold;
+}

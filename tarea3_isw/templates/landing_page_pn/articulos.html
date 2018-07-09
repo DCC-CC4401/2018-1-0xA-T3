@@ -1,64 +1,87 @@
 {% extends '../landing_page_pn.html' %}
 {% block cond_art_esp %}
-    <form id="search" method="post">
-    {% csrf_token %}
-    <div class="row-element">
-        <div class="search-bar-container">
-            <i class="fa fa-search search-icon-custom"></i>
-            <input id="searchbar" class="search-bar-container-input" type="text" placeholder="Busqueda..."/>
-            <div class="search-button"><a  href="#">Buscar</a></div>
-        </div>
-    </div>
-    <div class="row-element">
-        <div class="advanced-search">
-            <button onclick="toggleAdvancedSearch()" style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">Búsqueda Avanzada</button>
-        </div>
-    </div>
 
-{#    Falta hacer las forms para consultas y el diseño de la búsquda#}
-    <div id="advanced-options" align="right" style="display: none">
-        <select id="type-select">
-            <option value="none"></option>
-            {% for type in types %}
-                <option value="{{ type }}">{{ type }}</option>
-            {% endfor %}
-        </select>
+    <form method="POST" action="">
+        {% csrf_token %}
 
-        <select id="disponibility-select">
-            <option value="none"></option>
-            <option value="Disponible">Disponible</option>
-            <option value="Prestado">Prestado</option>
-            <option value="En reparación">En Reparación</option>
-            <option value="Perdido">Perdido</option>
-        </select>
-    </div>
+        <div class="row-element">
+            <div class="search-bar-container">
+                <i class="fa fa-search search-icon-custom"></i>
+                {{ form.name }}
+                <div class="search-button"><a href="#"
+                                              onclick="$(this).closest('form').submit()">Buscar</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="advanced-options" class="row-element"
+             style="display: none; max-width: 200px; margin-left: auto; margin-right: auto">
+            <div id="advanced-options" class="row-element" style="float: left">
+                {{ form.type }}
+            </div>
+
+            <div id="disponibility-select" style="float: right">
+                {{ form.state }}
+            </div>
+        </div>
     </form>
 
-     <table id="results" width="80%">
-        {% for set in query %}
-{#            Cada set tiene 5 items#}
-        <tr>
-            {% for item in set %}
-            <td>
-                <!-- Representacion item-->
-{#                Falta encerrar la foto y el nombre en cajas. Creo que se puede hacer con js#}
-                    <img src="{{ item.photo }}" width="64" height="64" alt="{{ item.name }}">
-                    <text>{{ item.name }}</text>
-            </td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
-    </table>
+    <div class="row-element">
+        <div class="advanced-search">
+            <button id="search-mode" onclick="toggleAdvancedSearch()"
+                    style="background-color: transparent; border: transparent; color: #005cbf; cursor: pointer">
+                Búsqueda Avanzada
+            </button>
+        </div>
+    </div>
+    <br>
+
+    {% if query|length != 0 %}
+        <div id="query-table" align="center">
+            <table id="results" width="100%">
+                {% for set in query %}
+                    {#            Cada set tiene 5 items#}
+                    <tr>
+                        {% for item in set %}
+                            <td>
+                                <a href="/{{ item.get_url }}">
+                                    <div id="article-box"
+                                         style="background-color: black; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); margin-bottom: 25px; text-align: center; width: 200px; height: 240px; margin-right: 15px">
+                                        <div style="width: 100%; height: 85%">
+                                            <img src="{{ item.image.url }}"
+                                                 style="width: 100%; height: 90%"
+                                                 alt="{{ item.name }}">
+                                        </div>
+                                        <p style="color: white">{{ item.name }}</p>
+                                    </div>
+                                </a>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% elif after_query %}
+        {#        Caso query retorna vacio#}
+        <p>No se encontró ninguna conicidencia</p>
+    {% endif %}
 
 
     <script>
-    function toggleAdvancedSearch() {
-        var x = document.getElementById("advanced-options");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
+        function toggleAdvancedSearch() {
+            var options = document.getElementById("advanced-options");
+            var btn = document.getElementById("search-mode");
+            var type = document.getElementById("type-select");
+            var disponibility = document.getElementById("disponibility-select");
+            if (options.style.display === "none") {
+                options.style.display = "block";
+                btn.textContent = "Búsqueda Simple";
+            } else {
+                options.style.display = "none";
+                btn.textContent = "Búsqueda Avanzada";
+                type.getElementsByTagName('option')[0].selected = 'selected';
+                disponibility.getElementsByTagName('option')[0].selected = 'selected';
+            }
         }
-    }
     </script>
 {% endblock %}
