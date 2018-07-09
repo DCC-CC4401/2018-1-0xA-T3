@@ -224,12 +224,16 @@ def perfil_usuario_dueno(request):
 	article_history = ArticleLoan.objects.filter(user=request.user) \
 		                  .order_by('-init_date')[:10]
 
+	print("Article_history")
+	for art in article_history:
+		print(art.article)
+
 	place_history = PlaceReservation.objects.filter(user=request.user) \
 		                .order_by('-init_date')[:10]
 
 	context = {
-		'article-history': article_history,
-		'place-history': place_history
+		'article_history': article_history,
+		'place_history': place_history
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
