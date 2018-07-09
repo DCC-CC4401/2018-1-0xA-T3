@@ -1,0 +1,38 @@
+#search-mode{
+    background-color: transparent;
+    border: transparent;
+    color: #005cbf;
+    cursor: pointer;
+}
+
+.article-box{
+    background-color: black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 25px;
+    text-align: center;
+    width: 200px;
+    height: 240px;
+    margin-right: 15px;
+    display:inline-block;
+}
+
+.article-box-container{
+}
+
+.article-box-link {
+
+}
+
+.article-box-inside{
+    width: 100%;
+    height: 85%;
+}
+
+.article-box-inside-img{
+    width: 100%;
+    height: 90%;
+}
+
+.article-box-name{
+    color: white;
+}
