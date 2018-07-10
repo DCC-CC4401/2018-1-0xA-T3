@@ -3,7 +3,7 @@
 const fichaArticulo = (() => {
 
 $(() => $('.ask-art-date').datetimepicker({
-    format:'Y-m-d H:m'
+    format:'d-M-Y, H:i'
 }));
 
 jQuery.datetimepicker.setLocale('es');

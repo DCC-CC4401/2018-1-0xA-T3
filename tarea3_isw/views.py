@@ -13,6 +13,7 @@ from .db_utils import any_article_id, get_article_by_id
 from .states import *
 import re
 import random
+import datetime
 
 
 @login_required
@@ -48,6 +49,32 @@ def dyn_styles(request):
 def urlify_name(name):
 	return re.sub(r'\s+', '-', name).lower()
 
+month_dict = {
+	'Ene': 1,
+	'Feb': 2,
+	'Mar': 3,
+	'Abr': 4,
+	'May': 5,
+	'Jun': 6,
+	'Jul': 7,
+	'Ago': 8,
+	'Sep': 9,
+	'Oct': 10,
+	'Nov': 11,
+	'Dic': 12,
+}
+
+def extract_client_date(cdate):
+	regex = r'(\d{2})-(\w+)-(\d{4}), (\d{2}):(\d{2})'
+	matched = re.search(regex, cdate)
+	if matched is not None:
+		day, month, year, hour, mins = int(matched.group(1)),\
+									   int(month_dict[matched.group(2)]),\
+									   int(matched.group(3)),\
+									   int(matched.group(4)),\
+									   int(matched.group(5))
+		return datetime.datetime(year=year, month=month, day=day, hour=hour, minute=mins)
+	return None
 
 def urlify_article_id(id):
 	return '/ficha-articulo/id_%s' % str(id)
@@ -89,7 +116,7 @@ def ficha_articulo(request, article_name, article_id):
 			error_msg = ask_article_loan(request, article_id)
 			article_loan_requested = len(error_msg) == 0
 
-	articles_loans = ArticleLoan.objects.filter(article=article)
+	articles_loans = ArticleLoan.objects.filter(article=article).order_by('-id')
 	date_loans = [(article_loan.init_date, article_loan.end_date) for article_loan in articles_loans]
 
 	article_form = None
@@ -334,6 +361,13 @@ def create_article(request):
 def ask_article_loan(request, article_id):
 	error_msg = ''
 	if request.method == 'POST':
+		init_date = str(extract_client_date(request.POST.get('init_date')))
+		end_date = str(extract_client_date(request.POST.get('end_date')))
+		request.POST = request.POST.copy()
+		request.POST.update({
+			'init_date': init_date,
+			'end_date': end_date,
+		})
 		form = AskArticleLoanForm(request.POST)
 		if form.is_valid():
 			post = form.save(commit=False)

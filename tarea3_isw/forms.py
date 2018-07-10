@@ -105,8 +105,13 @@ class AskArticleLoanForm(forms.ModelForm):
 			'end_date':  'Hasta'
 		}
 
+
 	def clean(self):
 		data = self.cleaned_data
+		#init_input = data['init_date']
+		#print(str(init_input))
+		#dt = datetime.datetime.strptime(init_input, '%Y-%M-%d %H:%i')
+		#print(str(dt))
 		if data['init_date'] > data['end_date']:
 			raise forms.ValidationError(u'La fecha de inicio debe ser antes de la fecha de término')
 
