@@ -199,11 +199,48 @@ def landing_page_admin_articuloespacio(request):
 	return HttpResponse(template.render(context, request))
 
 
+
 @login_required
 def landing_page_admin_grilla(request):
 	template = loader.get_template('landing_page_admin/grilla.html')
 	all_Reservas = PlaceReservation.objects.all().filter(state=1)
 	all_Prestamos = ArticleLoan.objects.all()
+	context = {
+	'all_Reservas'  : all_Reservas,
+	'all_Prestamos' : all_Prestamos,
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_grillav(request):
+	template = loader.get_template('landing_page_admin/grilla.html')
+	all_Reservas = PlaceReservation.objects.all().filter(state=1)
+	all_Prestamos = ArticleLoan.objects.all().filter(state=2)
+	context = {
+	'all_Reservas'  : all_Reservas,
+	'all_Prestamos' : all_Prestamos,
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_grillac(request):
+	template = loader.get_template('landing_page_admin/grilla.html')
+	all_Reservas = PlaceReservation.objects.all().filter(state=1)
+	all_Prestamos = ArticleLoan.objects.all().filter(state=4)
+	context = {
+	'all_Reservas'  : all_Reservas,
+	'all_Prestamos' : all_Prestamos,
+	}
+	context = {**context, **common_context_logged(request)}
+	return HttpResponse(template.render(context, request))
+
+@login_required
+def landing_page_admin_grillap(request):
+	template = loader.get_template('landing_page_admin/grilla.html')
+	all_Reservas = PlaceReservation.objects.all().filter(state=1)
+	all_Prestamos = ArticleLoan.objects.all().filter(state=6)
 	context = {
 	'all_Reservas'  : all_Reservas,
 	'all_Prestamos' : all_Prestamos,
@@ -248,7 +285,6 @@ def modificarPendientes(request):
 			reserva.save()
 
 		return HttpResponseRedirect('/landing-page-admin/grilla')
-
 
 	else:
 

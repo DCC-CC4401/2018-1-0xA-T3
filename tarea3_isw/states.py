@@ -38,6 +38,7 @@ class LoanStates(AutoNumber):
 	REJECTED = 'Rechazado'
 	EXPIRED = 'Caducado'
 	FINISHED = 'Finalizado'
+	LOST = 'Perdido'
 
 
 class ReservationStates(AutoNumber):

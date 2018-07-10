@@ -44,7 +44,18 @@ tr:nth-child(even){background-color: #f2f2f2}
 {% csrf_token %}
 
 <table>
+<tr>
+    <td> </td>
+</tr>
+<tr>
+    <td> Mostrar préstamos: </td>
+    <td>
+         <a href="/landing-page-admin/grilla">Todos</a></td>
+   <td>  <a href="/landing-page-admin/grillav">Vigentes</a> </td>
+    <td> <a href="/landing-page-admin/grillac">Caducados</a> </td>
+    <td> <a href="/landing-page-admin/grillap">Perdidos</a> </td>
 
+</tr>
     <tr>
 
          <td>
@@ -121,6 +132,7 @@ tr:nth-child(even){background-color: #f2f2f2}
 
 </table>
 
+<img src="{% static "images/blank.jpg.png"%}" height="75" width="50" alt="Imagen">
     <table>
 
     <tr>
