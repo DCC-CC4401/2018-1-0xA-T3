@@ -29,10 +29,10 @@
                 <div class="f-art-article-align-left-top f-art-article-state-common {{ article_state_css }}">&lt; {{ article_state }}</div>
                 {% if is_admin %}
                     <a href="#" id="edit_admin_click"><i class="far fa-edit f-art-icon-edit"></i></a>
-                    <form enctype="multipart/form-data" action="/modify-f-art/" method="post" class="f-art-modify-default" id="f-art-form-modify">
+                    <form enctype="multipart/form-data" action="" method="post" class="f-art-modify-default" id="f-art-form-modify">
                         {% csrf_token %}
                         {{ article_form }}
-                        <button type="submit">Modificar artículo</button>
+                        <button type="submit" name="f-art-modify-form-submit">Modificar artículo</button>
                     </form>
                     {{ article_form.errors }}
                     {{ article_form.non_field_errors }}
@@ -65,7 +65,7 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td> <button type="submit" class="f-art-enter-dates-submit">Pedir</button></td>
+                            <td> <button type="submit" class="f-art-enter-dates-submit" name="f-art-pedir">Pedir</button></td>
                         </tr>
                     </table>
                 </form>
@@ -87,7 +87,8 @@
 {% endblock %}
 {% block footer_js %}
     <script>
-        fichaArticulo.notifyIfRequestDone({{ article_loan_requested }});
+        fichaArticulo.notifyIfRequestDone({{ article_loan_requested }}, 'Reserva solicitada!');
+        fichaArticulo.notifyIfRequestDone({{ f_art_modified }}, 'Se modificó el artículo');
         fichaArticulo.notifyIfError('{{ error_msg }}');
     </script>
 {% endblock %}

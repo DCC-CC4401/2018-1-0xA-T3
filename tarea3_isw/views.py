@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
+	AskArticleLoanForm, ModifyArticleForm
+from .models import Article, ArticleLoan, PlaceReservation
 	AskArticleLoanForm
 from .models import Article, ArticleLoan, PlaceReservation, User, Place
 from .db_utils import any_article_id, get_article_by_id
@@ -16,6 +18,7 @@ from django.shortcuts import render
 from .states import *
 import re
 import random
+import datetime
 
 
 @login_required
@@ -69,6 +72,32 @@ def deletespace(request, Space_id):
 	else:
 		return render(request, '/landing_page_admin/articuloespacio.html')
 
+month_dict = {
+	'Ene': 1,
+	'Feb': 2,
+	'Mar': 3,
+	'Abr': 4,
+	'May': 5,
+	'Jun': 6,
+	'Jul': 7,
+	'Ago': 8,
+	'Sep': 9,
+	'Oct': 10,
+	'Nov': 11,
+	'Dic': 12,
+}
+
+def extract_client_date(cdate):
+	regex = r'(\d{2})-(\w+)-(\d{4}), (\d{2}):(\d{2})'
+	matched = re.search(regex, cdate)
+	if matched is not None:
+		day, month, year, hour, mins = int(matched.group(1)),\
+									   int(month_dict[matched.group(2)]),\
+									   int(matched.group(3)),\
+									   int(matched.group(4)),\
+									   int(matched.group(5))
+		return datetime.datetime(year=year, month=month, day=day, hour=hour, minute=mins)
+	return None
 
 def urlify_article_id(id):
 	return '/ficha-articulo/id_%s' % str(id)
@@ -101,11 +130,16 @@ def ficha_articulo(request, article_name, article_id):
 
 	error_msg = ''
 	article_loan_requested = False
+	f_art_modified = False
 	if request.method == 'POST':
-		error_msg = ask_article_loan(request, article_id)
-		article_loan_requested = len(error_msg) == 0
+		if 'f-art-modify-form-submit' in request.POST:
+			error_msg = modify_fart(request, article)
+			f_art_modified = len(error_msg) == 0
+		elif 'f-art-pedir' in request.POST:
+			error_msg = ask_article_loan(request, article_id)
+			article_loan_requested = len(error_msg) == 0
 
-	articles_loans = ArticleLoan.objects.filter(article=article)
+	articles_loans = ArticleLoan.objects.filter(article=article).order_by('-id')
 	date_loans = [(article_loan.init_date, article_loan.end_date) for article_loan in articles_loans]
 
 	article_form = None
@@ -118,10 +152,6 @@ def ficha_articulo(request, article_name, article_id):
 				'image': article.image
 			})
 
-		article_form.name = article.name
-		article_form.desc = article.desc
-		article_form.image = article.image
-
 	context = {
 		'article': article,
 		'article_state': str(ArticleStates(article.state)),
@@ -129,6 +159,7 @@ def ficha_articulo(request, article_name, article_id):
 		'form': AskArticleLoanForm(),
 		'error_msg': error_msg,
 		'article_loan_requested': article_loan_requested,
+		'f_art_modified': f_art_modified,
 		'date_loans': date_loans,
 		'is_admin': is_admin,
 		'article_form': article_form
@@ -261,14 +292,15 @@ def landing_page_pn_articulos(request):
 						set = []
 						n = 0
 
+					# Checkea que el estado del articulo sea correcto
+					if form.cleaned_data['state'] != 'none' \
+							and item.state != \
+							int(form.cleaned_data['state']):
+						continue
+
 					# Checkea que el tipo del articulo sea correcto
 					if form.cleaned_data['type'] != 'none' and item.type != \
 							form.cleaned_data['type']:
-						continue
-
-					# Checkea que el estado del articulo sea correcto
-					if form.cleaned_data['state'] != 'none' and item.state != \
-							form.cleaned_data['state']:
 						continue
 
 					set.append(item)
@@ -319,12 +351,12 @@ def perfil_usuario_dueno(request):
 	article_history = ArticleLoan.objects.filter(user=request.user) \
 		                  .order_by('-init_date')[:10]
 
-	print("Article_history")
-	for art in article_history:
-		print(art.article)
-
 	place_history = PlaceReservation.objects.filter(user=request.user) \
 		                .order_by('-init_date')[:10]
+
+	if request.method == 'POST':
+		todel = request.POST.getlist('todelete')
+		ArticleLoan.objects.filter(user=request.user, id__in=todel).delete()
 
 	context = {
 		'article_history': article_history,
@@ -332,6 +364,15 @@ def perfil_usuario_dueno(request):
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
+
+
+@login_required
+def perfil_usuario_dueno_espacios(request):
+	if request.method == 'POST':
+		todel = request.POST.getlist('todelete')
+		PlaceReservation.objects.filter(user=request.user,
+		                                id__in=todel).delete()
+	return redirect('/perfil-usuario-dueno/')
 
 
 def login(request):
@@ -408,6 +449,13 @@ def create_article(request):
 def ask_article_loan(request, article_id):
 	error_msg = ''
 	if request.method == 'POST':
+		init_date = str(extract_client_date(request.POST.get('init_date')))
+		end_date = str(extract_client_date(request.POST.get('end_date')))
+		request.POST = request.POST.copy()
+		request.POST.update({
+			'init_date': init_date,
+			'end_date': end_date,
+		})
 		form = AskArticleLoanForm(request.POST)
 		if form.is_valid():
 			post = form.save(commit=False)
@@ -420,26 +468,25 @@ def ask_article_loan(request, article_id):
 	return error_msg
 
 
-def modify_fart(request):
-	if request.method == 'POST':
-		form = CreateArticleForm(request.POST, request.FILES)
-		if form.is_valid():
-			article = get_article_by_id()
-			article.name = form.cleaned_data['name']
-			article.desc = form.cleaned_data['desc']
-			article.save()
-			article.image = form.cleaned_data['image']
-			article.save()
+def modify_fart(request, article):
+	error_msg = ''
+	form = ModifyArticleForm(request.POST, request.FILES)
+	if form.is_valid():
+		new_name = form.cleaned_data['name']
+		new_desc = form.cleaned_data['desc']
+		new_image = form.cleaned_data['image']
+		if new_name and len(new_name) > 0:
+			article.name = new_name
+		if new_desc and len(new_desc) > 0:
+			article.desc = new_desc
+		article.save()
+		if new_image:
+			print("nes image!!!")
+			article.image = new_image
 		else:
-			print("Form is not valid")
-			print(form.errors)
+			print("no nses image!")
+		article.save()
+	else:
+		error_msg = form.errors
 
-		return redirect('/create-article/')
-
-	template = loader.get_template('create_article.html')
-	context = {
-		'form': CreateArticleForm()
-	}
-	context = {**context, **common_context_logged(request)}
-
-	return HttpResponse(template.render(context, request))
+	return error_msg

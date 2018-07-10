@@ -3,7 +3,7 @@
 const fichaArticulo = (() => {
 
 $(() => $('.ask-art-date').datetimepicker({
-    format:'Y-m-d H:m'
+    format:'d-M-Y, H:i'
 }));
 
 jQuery.datetimepicker.setLocale('es');
@@ -14,12 +14,12 @@ $('#edit_admin_click').click(function(){
     //console.log($('.f-art-modify-default').classList)
 });
 
-const notifyIfRequestDone = (shouldNotify) => {
+const notifyIfRequestDone = (shouldNotify, msg) => {
   if (!shouldNotify){
       return;
   }
   $.notify({
-     message: 'Reserva solicitada!'
+     message: msg
   }, {
       type: 'success'
   });

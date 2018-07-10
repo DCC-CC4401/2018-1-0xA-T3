@@ -56,15 +56,21 @@ class CreateArticleForm(forms.Form):
 	image = forms.ImageField()
 
 
+class ModifyArticleForm(forms.Form):
+	name = forms.CharField(required=False)
+	desc = forms.CharField(required=False)
+	image = forms.ImageField(required=False)
+
+
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
-	type = forms.CharField(widget=forms.Select(
+	state = forms.CharField(widget=forms.Select(
 	                       choices=[("none", "Estado"),
-	                             ("Disponible", "Disponible"),
-	                             ("Prestado", "Prestado"),
-	                             ("En Reparación", "En Reparación"),
-	                             ("Perdido", "Perdido")]), label="Estado")
-	state = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
+	                             ("1", "Disponible"),
+	                             ("2", "Prestado"),
+	                             ("3", "En Reparación"),
+	                             ("4", "Perdido")]), label="Estado")
+	type = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
 	                        label="Tipo")
 
 	def __init__(self, *args, **kwargs):
@@ -99,8 +105,13 @@ class AskArticleLoanForm(forms.ModelForm):
 			'end_date':  'Hasta'
 		}
 
+
 	def clean(self):
 		data = self.cleaned_data
+		#init_input = data['init_date']
+		#print(str(init_input))
+		#dt = datetime.datetime.strptime(init_input, '%Y-%M-%d %H:%i')
+		#print(str(dt))
 		if data['init_date'] > data['end_date']:
 			raise forms.ValidationError(u'La fecha de inicio debe ser antes de la fecha de término')
 
