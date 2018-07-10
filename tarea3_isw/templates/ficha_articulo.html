@@ -3,7 +3,7 @@
 
 {% block css_content %}
     <link rel="stylesheet" href="{% static "external/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css"%}">
-    <link rel="stylesheet" href="{% static "css/ficha_articulo.css"%}">
+    <link rel="stylesheet" href="{% static "css/ficha_articulo.css"%}?xx={{ random_val }}">
 
 {% endblock %}
 
@@ -27,6 +27,16 @@
             <div class="f-art-left-top-float">
                 <div class="f-art-article-align-left-top f-art-article-name-header ">{{ article.name }}</div>
                 <div class="f-art-article-align-left-top f-art-article-state-common {{ article_state_css }}">&lt; {{ article_state }}</div>
+                {% if is_admin %}
+                    <a href="#" id="edit_admin_click"><i class="far fa-edit f-art-icon-edit"></i></a>
+                    <form enctype="multipart/form-data" action="/modify-f-art/" method="post" class="f-art-modify-default" id="f-art-form-modify">
+                        {% csrf_token %}
+                        {{ article_form }}
+                        <button type="submit">Modificar artículo</button>
+                    </form>
+                    {{ article_form.errors }}
+                    {{ article_form.non_field_errors }}
+                {% endif %}
             </div>
             <div class="f-art-image">
                 <img src="{{ article.image.url }}">
@@ -58,10 +68,19 @@
                             <td> <button type="submit" class="f-art-enter-dates-submit">Pedir</button></td>
                         </tr>
                     </table>
-
-
                 </form>
-                {{ error_msg }}
+            </div>
+            <div class="f-art-history">
+                <span class="f-art-right-container-header">Historial Reservas</span>
+                <ul class="f-art-history-list">
+                    {% if date_loans %}
+                        {% for init_date, end_date in date_loans %}
+                            <li>{{ init_date }} <span class="until-arrow-date">-></span> {{ end_date }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <span class="no-previous-reservations">No han habido reservas pasadas</span>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
@@ -69,5 +88,6 @@
 {% block footer_js %}
     <script>
         fichaArticulo.notifyIfRequestDone({{ article_loan_requested }});
+        fichaArticulo.notifyIfError('{{ error_msg }}');
     </script>
 {% endblock %}
