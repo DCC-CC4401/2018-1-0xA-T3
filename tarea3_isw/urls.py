@@ -2,6 +2,8 @@ from django.urls import path, re_path
 from . import views
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import url
+
 
 urlpatterns = [
     path('', views.index, name='login'),
@@ -23,6 +25,7 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
 
     path('create-article/', views.create_article, name='create_article'),
+    url(r'^updatearticle/(?P<pk>\d+)/$', views.ArticleUpdate.as_view(), name='updatearticle'),
     path('deletearticle/<int:Article_id>', views.deletearticle, name='deletearticle'),
     path('deletespace/<int:Space_id>', views.deletespace, name='deletespace'),
 

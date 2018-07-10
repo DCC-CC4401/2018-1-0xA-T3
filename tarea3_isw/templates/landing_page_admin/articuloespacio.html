@@ -61,6 +61,12 @@ tr:nth-child(even){background-color: #f2f2f2}
             {% csrf_token %}
              <input type="image" src="{% static "images/deleteicon.png"%}" height="21" width="21"  alt="Borrar" />
                 </form>
+             </td>
+                <td>
+                    <form action="{% url 'updatearticle' art.id%}" method="post">
+            {% csrf_token %}
+             <input type="image" src="{% static "images/editicon.png"%}" height="21" width="21"  alt="Borrar" />
+                </form>
             </td>
 
     </tr>

@@ -5,13 +5,13 @@ from django.contrib.auth import authenticate, login as django_auth_login, \
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-
+from django.views.generic.edit import UpdateView
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm, ModifyArticleForm
 from .models import Article, ArticleLoan, PlaceReservation
 from .models import Article, ArticleLoan, PlaceReservation, User, Place
 from .db_utils import any_article_id, get_article_by_id
-
+from django.urls import reverse_lazy
 from django.shortcuts import render
 
 from .states import *
@@ -525,3 +525,8 @@ def modify_fart(request, article):
 		error_msg = form.errors
 
 	return error_msg
+
+class ArticleUpdate(UpdateView):
+	model = Article
+	fields = ['name','desc','image','state']
+	success_url = reverse_lazy('landing_page_admin_articuloespacio')
