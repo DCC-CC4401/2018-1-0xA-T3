@@ -11,10 +11,10 @@ class LoginForm(forms.Form):
 
 	def __init__(self, *args, **kwargs):
 		super(LoginForm, self).__init__(*args, **kwargs)
-		self.fields['email'].widget.attrs\
+		self.fields['email'].widget.attrs \
 			.update({'placeholder': 'e-mail'})
 
-		self.fields['password'].widget.attrs\
+		self.fields['password'].widget.attrs \
 			.update({'placeholder': 'password'})
 
 
@@ -26,23 +26,49 @@ class RegisterForm(UserCreationForm):
 
 	def __init__(self, *args, **kwargs):
 		super(RegisterForm, self).__init__(*args, **kwargs)
-		self.fields['email'].widget.attrs\
+		self.fields['email'].widget.attrs \
 			.update({'placeholder': 'Correo'})
 
-		self.fields['first_name'].widget.attrs\
+		self.fields['first_name'].widget.attrs \
 			.update({'placeholder': 'Nombre'})
 
-		self.fields['last_name'].widget.attrs\
+		self.fields['last_name'].widget.attrs \
 			.update({'placeholder': 'Apellido'})
 
-		self.fields['rut'].widget.attrs\
+		self.fields['rut'].widget.attrs \
 			.update({'placeholder': 'Rut'})
 
-		self.fields['password1'].widget.attrs\
+		self.fields['password1'].widget.attrs \
 			.update({'placeholder': 'Contraseña'})
 
-		self.fields['password2'].widget.attrs\
+		self.fields['password2'].widget.attrs \
 			.update({'placeholder': 'Confirmar Contraseña'})
+
+	def is_valid(self):
+		valid = super(RegisterForm, self).is_valid()
+		if not valid:
+			return valid
+
+		rut = self.cleaned_data['rut']
+		digits, verify = rut.split("-")
+		digits = digits.replace(".", "")[::-1]
+		sum = 0
+		mult = [2, 3, 4, 5, 6, 7]
+		for i in range(len(digits)):
+			sum += int(digits[i]) * mult[i % 6]
+
+		result = sum // 11 - sum % 11
+		if result == 10 and verify == 'k':
+			return True
+
+		elif result == 11 and verify == '0':
+			return True
+
+		try:
+			return result == int(verify)
+
+		except: # Digito verificador no era numero
+			return False
 
 	class Meta:
 		model = User
@@ -65,17 +91,17 @@ class ModifyArticleForm(forms.Form):
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
 	state = forms.CharField(widget=forms.Select(
-	                       choices=[("none", "Estado"),
-	                             ("1", "Disponible"),
-	                             ("2", "Prestado"),
-	                             ("3", "En Reparación"),
-	                             ("4", "Perdido")]), label="Estado")
+		choices=[("none", "Estado"),
+		         ("1", "Disponible"),
+		         ("2", "Prestado"),
+		         ("3", "En Reparación"),
+		         ("4", "Perdido")]), label="Estado")
 	type = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
-	                        label="Tipo")
+	                       label="Tipo")
 
 	def __init__(self, *args, **kwargs):
 		super(SearchForm, self).__init__(*args, **kwargs)
-		self.fields['name'].widget.attrs\
+		self.fields['name'].widget.attrs \
 			.update({'id': 'searchbar',
 		             'class': 'search-bar-container-input',
 		             'type': 'text',
@@ -83,6 +109,7 @@ class SearchForm(forms.Form):
 
 
 SELECCIONAR_FECHA = 'Seleccione Fecha'
+
 
 class AskArticleLoanForm(forms.ModelForm):
 	class Meta:
@@ -102,20 +129,21 @@ class AskArticleLoanForm(forms.ModelForm):
 		}
 		labels = {
 			'init_date': 'Desde',
-			'end_date':  'Hasta'
+			'end_date': 'Hasta'
 		}
-
 
 	def clean(self):
 		data = self.cleaned_data
-		#init_input = data['init_date']
-		#print(str(init_input))
-		#dt = datetime.datetime.strptime(init_input, '%Y-%M-%d %H:%i')
-		#print(str(dt))
+		# init_input = data['init_date']
+		# print(str(init_input))
+		# dt = datetime.datetime.strptime(init_input, '%Y-%M-%d %H:%i')
+		# print(str(dt))
 		if data['init_date'] > data['end_date']:
-			raise forms.ValidationError(u'La fecha de inicio debe ser antes de la fecha de término')
+			raise forms.ValidationError(
+				u'La fecha de inicio debe ser antes de la fecha de término')
 
 		next_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
 
-		if data['init_date'].date() < next_hour.date() :
-			raise forms.ValidationError(u'La fecha de inicio debe ser al menos en una hora')
+		if data['init_date'].date() < next_hour.date():
+			raise forms.ValidationError(
+				u'La fecha de inicio debe ser al menos en una hora')
