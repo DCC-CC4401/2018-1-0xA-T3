@@ -56,6 +56,12 @@ class CreateArticleForm(forms.Form):
 	image = forms.ImageField()
 
 
+class ModifyArticleForm(forms.Form):
+	name = forms.CharField(required=False)
+	desc = forms.CharField(required=False)
+	image = forms.ImageField(required=False)
+
+
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
 	type = forms.CharField(widget=forms.Select(

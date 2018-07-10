@@ -14,12 +14,12 @@ $('#edit_admin_click').click(function(){
     //console.log($('.f-art-modify-default').classList)
 });
 
-const notifyIfRequestDone = (shouldNotify) => {
+const notifyIfRequestDone = (shouldNotify, msg) => {
   if (!shouldNotify){
       return;
   }
   $.notify({
-     message: 'Reserva solicitada!'
+     message: msg
   }, {
       type: 'success'
   });

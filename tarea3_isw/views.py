@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
-	AskArticleLoanForm
+	AskArticleLoanForm, ModifyArticleForm
 from .models import Article, ArticleLoan, PlaceReservation
 from .db_utils import any_article_id, get_article_by_id
 
@@ -80,9 +80,14 @@ def ficha_articulo(request, article_name, article_id):
 
 	error_msg = ''
 	article_loan_requested = False
+	f_art_modified = False
 	if request.method == 'POST':
-		error_msg = ask_article_loan(request, article_id)
-		article_loan_requested = len(error_msg) == 0
+		if 'f-art-modify-form-submit' in request.POST:
+			error_msg = modify_fart(request, article)
+			f_art_modified = len(error_msg) == 0
+		elif 'f-art-pedir' in request.POST:
+			error_msg = ask_article_loan(request, article_id)
+			article_loan_requested = len(error_msg) == 0
 
 	articles_loans = ArticleLoan.objects.filter(article=article)
 	date_loans = [(article_loan.init_date, article_loan.end_date) for article_loan in articles_loans]
@@ -97,10 +102,6 @@ def ficha_articulo(request, article_name, article_id):
 				'image': article.image
 			})
 
-		article_form.name = article.name
-		article_form.desc = article.desc
-		article_form.image = article.image
-
 	context = {
 		'article': article,
 		'article_state': str(ArticleStates(article.state)),
@@ -108,6 +109,7 @@ def ficha_articulo(request, article_name, article_id):
 		'form': AskArticleLoanForm(),
 		'error_msg': error_msg,
 		'article_loan_requested': article_loan_requested,
+		'f_art_modified': f_art_modified,
 		'date_loans': date_loans,
 		'is_admin': is_admin,
 		'article_form': article_form
@@ -344,26 +346,25 @@ def ask_article_loan(request, article_id):
 	return error_msg
 
 
-def modify_fart(request):
-	if request.method == 'POST':
-		form = CreateArticleForm(request.POST, request.FILES)
-		if form.is_valid():
-			article = get_article_by_id()
-			article.name = form.cleaned_data['name']
-			article.desc = form.cleaned_data['desc']
-			article.save()
-			article.image = form.cleaned_data['image']
-			article.save()
+def modify_fart(request, article):
+	error_msg = ''
+	form = ModifyArticleForm(request.POST, request.FILES)
+	if form.is_valid():
+		new_name = form.cleaned_data['name']
+		new_desc = form.cleaned_data['desc']
+		new_image = form.cleaned_data['image']
+		if new_name and len(new_name) > 0:
+			article.name = new_name
+		if new_desc and len(new_desc) > 0:
+			article.desc = new_desc
+		article.save()
+		if new_image:
+			print("nes image!!!")
+			article.image = new_image
 		else:
-			print("Form is not valid")
-			print(form.errors)
+			print("no nses image!")
+		article.save()
+	else:
+		error_msg = form.errors
 
-		return redirect('/create-article/')
-
-	template = loader.get_template('create_article.html')
-	context = {
-		'form': CreateArticleForm()
-	}
-	context = {**context, **common_context_logged(request)}
-
-	return HttpResponse(template.render(context, request))
+	return error_msg
