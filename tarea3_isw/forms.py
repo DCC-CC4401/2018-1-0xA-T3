@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from tarea3_isw.models import Article, Types, User, ArticleLoan
+import datetime
 
 
 class LoginForm(forms.Form):
@@ -55,6 +56,12 @@ class CreateArticleForm(forms.Form):
 	image = forms.ImageField()
 
 
+class ModifyArticleForm(forms.Form):
+	name = forms.CharField(required=False)
+	desc = forms.CharField(required=False)
+	image = forms.ImageField(required=False)
+
+
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
 	type = forms.CharField(widget=forms.Select(
@@ -97,3 +104,13 @@ class AskArticleLoanForm(forms.ModelForm):
 			'init_date': 'Desde',
 			'end_date':  'Hasta'
 		}
+
+	def clean(self):
+		data = self.cleaned_data
+		if data['init_date'] > data['end_date']:
+			raise forms.ValidationError(u'La fecha de inicio debe ser antes de la fecha de término')
+
+		next_hour = datetime.datetime.now() + datetime.timedelta(hours=1)
+
+		if data['init_date'].date() < next_hour.date() :
+			raise forms.ValidationError(u'La fecha de inicio debe ser al menos en una hora')

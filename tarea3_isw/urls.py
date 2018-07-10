@@ -21,7 +21,9 @@ urlpatterns = [
 
     path('create-article/', views.create_article, name='create_article'),
 
-    path('dyn_styles/', views.dyn_styles, name='dyn_styles')
+    path('dyn_styles/', views.dyn_styles, name='dyn_styles'),
+
+    path('modify-f-art/', views.modify_fart, name='modify_fart')
 ]
 
 
