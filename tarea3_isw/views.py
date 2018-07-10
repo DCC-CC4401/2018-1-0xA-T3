@@ -225,11 +225,6 @@ def landing_page_pn_articulos(request):
 							form.cleaned_data['type']:
 						continue
 
-					# Checkea que el estado del articulo sea correcto
-					if form.cleaned_data['state'] != 'none' and item.state != \
-							form.cleaned_data['state']:
-						continue
-
 					set.append(item)
 					n += 1
 
@@ -278,12 +273,12 @@ def perfil_usuario_dueno(request):
 	article_history = ArticleLoan.objects.filter(user=request.user) \
 		                  .order_by('-init_date')[:10]
 
-	print("Article_history")
-	for art in article_history:
-		print(art.article)
-
 	place_history = PlaceReservation.objects.filter(user=request.user) \
 		                .order_by('-init_date')[:10]
+
+	if request.method == 'POST':
+		todel = request.POST.getlist('todelete')
+		ArticleLoan.objects.filter(user=request.user, id__in=todel).delete()
 
 	context = {
 		'article_history': article_history,
@@ -291,6 +286,15 @@ def perfil_usuario_dueno(request):
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
+
+
+@login_required
+def perfil_usuario_dueno_espacios(request):
+	if request.method == 'POST':
+		todel = request.POST.getlist('todelete')
+		PlaceReservation.objects.filter(user=request.user,
+		                                id__in=todel).delete()
+	return redirect('/perfil-usuario-dueno/')
 
 
 def login(request):
