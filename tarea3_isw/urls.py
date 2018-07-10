@@ -22,7 +22,9 @@ urlpatterns = [
     path('deletearticle/<int:Article_id>', views.deletearticle, name='deletearticle'),
     path('deletespace/<int:Space_id>', views.deletespace, name='deletespace'),
 
-    path('dyn_styles/', views.dyn_styles, name='dyn_styles')
+    path('dyn_styles/', views.dyn_styles, name='dyn_styles'),
+
+    path('modify-f-art/', views.modify_fart, name='modify_fart')
 ]
 
 

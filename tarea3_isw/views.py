@@ -102,6 +102,22 @@ def ficha_articulo(request, article_name, article_id):
 		error_msg = ask_article_loan(request, article_id)
 		article_loan_requested = len(error_msg) == 0
 
+	articles_loans = ArticleLoan.objects.filter(article=article)
+	date_loans = [(article_loan.init_date, article_loan.end_date) for article_loan in articles_loans]
+
+	article_form = None
+	is_admin = request.user.is_admin
+	if is_admin:
+		article_form = CreateArticleForm(
+			initial={
+				'name': article.name,
+				'desc': article.desc,
+				'image': article.image
+			})
+
+		article_form.name = article.name
+		article_form.desc = article.desc
+		article_form.image = article.image
 
 	context = {
 		'article': article,
@@ -109,7 +125,10 @@ def ficha_articulo(request, article_name, article_id):
 		'article_state_css': ArticleStates(article.state).get_css_name(),
 		'form': AskArticleLoanForm(),
 		'error_msg': error_msg,
-		'article_loan_requested': article_loan_requested
+		'article_loan_requested': article_loan_requested,
+		'date_loans': date_loans,
+		'is_admin': is_admin,
+		'article_form': article_form
 	}
 	context = {**context, **common_context_logged(request)}
 
@@ -349,3 +368,28 @@ def ask_article_loan(request, article_id):
 			error_msg = form.errors
 
 	return error_msg
+
+
+def modify_fart(request):
+	if request.method == 'POST':
+		form = CreateArticleForm(request.POST, request.FILES)
+		if form.is_valid():
+			article = get_article_by_id()
+			article.name = form.cleaned_data['name']
+			article.desc = form.cleaned_data['desc']
+			article.save()
+			article.image = form.cleaned_data['image']
+			article.save()
+		else:
+			print("Form is not valid")
+			print(form.errors)
+
+		return redirect('/create-article/')
+
+	template = loader.get_template('create_article.html')
+	context = {
+		'form': CreateArticleForm()
+	}
+	context = {**context, **common_context_logged(request)}
+
+	return HttpResponse(template.render(context, request))
