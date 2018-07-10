@@ -4,11 +4,14 @@ from django.contrib.auth import authenticate, login as django_auth_login, \
 	logout as django_auth_logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm
 from .models import Article, ArticleLoan, PlaceReservation, User, Place
 from .db_utils import any_article_id, get_article_by_id
+
+from django.shortcuts import render
 
 from .states import *
 import re
@@ -169,10 +172,57 @@ def landing_page_admin_articuloespacio(request):
 @login_required
 def landing_page_admin_grilla(request):
 	template = loader.get_template('landing_page_admin/grilla.html')
+	all_Reservas = PlaceReservation.objects.all().filter(state=1)
+	all_Prestamos = ArticleLoan.objects.all()
 	context = {
+	'all_Reservas'  : all_Reservas,
+	'all_Prestamos' : all_Prestamos,
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
+
+def modificarPendientes(request):
+
+	if 'aceptar' in request.POST:
+		lista = request.POST.getlist('prestamos')
+		for i in lista:
+			prestamo = ArticleLoan.objects.get(pk= i)
+			prestamo.state = 2
+			prestamo.save()
+
+		return HttpResponseRedirect('/landing-page-admin/grilla')
+
+	elif 'rechazar' in request.POST:
+		lista = request.POST.getlist('prestamos')
+		for i in lista:
+			prestamo = ArticleLoan.objects.get(pk=i)
+			prestamo.state = 3
+			prestamo.save()
+
+		return HttpResponseRedirect('/landing-page-admin/grilla')
+
+	elif 'obsequiar' in request.POST:
+		lista = request.POST.getlist('reservas')
+		for i in lista:
+			reserva = PlaceReservation.objects.get(pk=i)
+			reserva.state = 2
+			reserva.save()
+
+		return HttpResponseRedirect('/landing-page-admin/grilla')
+
+	elif 'anular' in request.POST:
+		lista = request.POST.getlist('reservas')
+		for i in lista:
+			reserva = PlaceReservation.objects.get(pk=i)
+			reserva.state = 3
+			reserva.save()
+
+		return HttpResponseRedirect('/landing-page-admin/grilla')
+
+
+	else:
+
+		return render(request, '/landing_page_admin/grilla')
 
 
 @login_required

@@ -1,5 +1,192 @@
 {% extends '../landing_page_admin.html' %}
 
+{% load static %}
+{% load utilidades %}
 {% block el_Contenido %}
+
+    {% block cond_art_esp %}
+    <div id="schedule-espacio-demo"></div>
+    <div id="calendar" align="center">
+
+    </div>
+
+    <div id="move-calendar" align="center">
+{#    Falta hacer el form para cambiar la semana que se esta viendo#}
+    </div>
+
+    <div class="salas">
+{#    CSS no esta funcionando#}
+    </div>
+{% endblock %}
+{% block extra_js %}
+     <script src="{% static "js/grilla.js" %}"></script>
+{% endblock %}
+
+    <style>
+table {
+    border-collapse: collapse;
+    margin-left:85px
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+
+
+
+
+tr:nth-child(even){background-color: #f2f2f2}
+</style>
+
+<form action="{% url 'modificarPendientes'  %}"  method="POST">
+{% csrf_token %}
+
+<table>
+
+    <tr>
+
+         <td>
+        </td>
+
+        <td>
+            Id
+        </td>
+
+        <td>
+            Artículo
+        </td>
+
+        <td>
+            Usuario
+        </td>
+
+        <td>
+            Fecha de solicitud
+        </td>
+        <td>
+            Fecha inicio préstamo
+        </td>
+        <td>
+            Fecha fin préstamo
+        </td>
+
+
+        <td>
+            <button name="aceptar" href="#"> <i class="fa fa-check fa-lg" aria-hidden="true"></i> </button>
+            <button name="rechazar" ><i class="fa fa-ban fa-lg" aria-hidden="true"></i></button>
+        </td>
+
+
+    </tr>
+
+
+    {% for pres in all_Prestamos reversed %}
+
+        <tr>
+            <td>
+                <input type="checkbox" name="prestamos" value="{{ pres.id }}">
+            </td>
+            <td>
+                {{ pres.id }}
+            </td>
+
+            <td>
+                {% ArticuloporId pres.article_id "name" %}
+            </td>
+
+            <td>
+                {% UserporId pres.user_id "first_name" %}
+                {% UserporId pres.user_id "last_name" %}
+            </td>
+
+            <td>
+               {{ pres.creation|date:"f a d/m"  }}
+            </td>
+            <td>
+               {{ pres.init_date|date:"f a d/m"  }}
+            </td>
+                    <td>
+               {{ pres.end_date|date:"f a d/m"  }}
+            </td>
+
+
+
+
+    </tr>
+
+    {% endfor %}
+
+
+</table>
+
+    <table>
+
+    <tr>
+
+        <td>
+
+        </td>
+        <td>
+            Id
+        </td>
+
+        <td>
+            Espacio
+        </td>
+
+        <td>
+            Usuario
+        </td>
+
+        <td>
+            Fecha de solicitud
+        </td>
+        <td>
+            Fecha inicio reserva
+        </td>
+        <td>
+            Fecha fin reserva
+        </td>
+        <td>
+            <button name="obsequiar" href="#"> <i class="fa fa-check fa-lg" aria-hidden="true"></i> </button>
+            <button name="anular" ><i class="fa fa-ban fa-lg" aria-hidden="true"></i></button>
+        </td>
+
+
+    </tr>
+    {% for res in all_Reservas reversed %}
+        <tr>
+
+            <td>
+                <input type="checkbox" name='reservas' value="{{ res.id }}">
+            </td>
+            <td>
+                {{ res.id }}
+            </td>
+
+            <td>
+                {% EspacioporId res.espacio_id "name" %}
+            </td>
+
+            <td>
+                {% UserporId res.user_id "first_name" %}
+                {% UserporId res.user_id "last_name" %}
+            </td>
+
+            <td>
+               {{ res.creation|date:"f a d/m"  }}
+            </td>
+            <td>
+               {{ res.init_date|date:"f a d/m"  }}
+            </td>
+            <td>
+               {{ res.end_date|date:"f a d/m"  }}
+            </td>
+    </tr>
+    {% endfor %}
+</table>
+</form>
 
 {% endblock %}

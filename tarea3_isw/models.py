@@ -3,6 +3,7 @@ from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
+from datetime import datetime
 
 from .managers import UserManager
 from .states import *
@@ -43,6 +44,7 @@ class ArticleLoan(models.Model):
 	end_date = models.DateTimeField()
 	state = models.IntegerField(default=int(LoanStates.PROCESSING))
 	user = models.ForeignKey('User', on_delete=models.CASCADE)
+	creation = models.DateTimeField(default=datetime.now, blank=True)
 
 
 class PlaceReservation(models.Model):
@@ -51,6 +53,7 @@ class PlaceReservation(models.Model):
 	end_date = models.DateTimeField()
 	state = models.IntegerField(default=int(ReservationStates.PROCESSING))
 	user = models.ForeignKey('User', on_delete=models.CASCADE)
+	creation = models.DateTimeField(default=datetime.now, blank=True)
 
 # SEARCH TYPES
 class Types(models.Model):

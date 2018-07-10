@@ -1,5 +1,5 @@
 .sidenav {
-    width: 130px;
+    width: 75px;
     position: fixed;
     z-index: 1;
     top: 400px;
@@ -21,9 +21,7 @@
 }
 
 .main {
-    margin-left: 140px; /* Same width as the sidebar + left position in px */
-    font-size: 28px; /* Increased text to enable scrolling */
-    padding: 0px 10px;
+    margin-left: 85px; /* Same width as the sidebar + left position in px */
 }
 
 @media screen and (max-height: 450px) {
