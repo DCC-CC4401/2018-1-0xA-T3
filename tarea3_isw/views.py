@@ -90,7 +90,8 @@ def ficha_articulo(request, article_name, article_id):
 			article_loan_requested = len(error_msg) == 0
 
 	articles_loans = ArticleLoan.objects.filter(article=article)
-	date_loans = [(article_loan.init_date, article_loan.end_date) for article_loan in articles_loans]
+	date_loans = [(article_loan.init_date, article_loan.end_date) for
+	              article_loan in articles_loans]
 
 	article_form = None
 	is_admin = request.user.is_admin
@@ -187,14 +188,15 @@ def landing_page_pn_articulos(request):
 						set = []
 						n = 0
 
+					# Checkea que el estado del articulo sea correcto
+					if form.cleaned_data['state'] != 'none' \
+							and item.state != \
+							int(form.cleaned_data['state']):
+						continue
+
 					# Checkea que el tipo del articulo sea correcto
 					if form.cleaned_data['type'] != 'none' and item.type != \
 							form.cleaned_data['type']:
-						continue
-
-					# Checkea que el estado del articulo sea correcto
-					if form.cleaned_data['state'] != 'none' and item.state != \
-							form.cleaned_data['state']:
 						continue
 
 					set.append(item)
@@ -259,12 +261,14 @@ def perfil_usuario_dueno(request):
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
 
+
 @login_required
 def perfil_usuario_dueno_espacios(request):
-    if request.method == 'POST':
-        todel = request.POST.getlist('todelete')
-        PlaceReservation.objects.filter(user=request.user, id__in=todel).delete()
-    return redirect('/perfil-usuario-dueno/')
+	if request.method == 'POST':
+		todel = request.POST.getlist('todelete')
+		PlaceReservation.objects.filter(user=request.user,
+		                                id__in=todel).delete()
+	return redirect('/perfil-usuario-dueno/')
 
 
 def login(request):

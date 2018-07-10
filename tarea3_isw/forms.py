@@ -64,13 +64,13 @@ class ModifyArticleForm(forms.Form):
 
 class SearchForm(forms.Form):
 	name = forms.CharField(required=True)
-	type = forms.CharField(widget=forms.Select(
+	state = forms.CharField(widget=forms.Select(
 	                       choices=[("none", "Estado"),
-	                             ("Disponible", "Disponible"),
-	                             ("Prestado", "Prestado"),
-	                             ("En Reparación", "En Reparación"),
-	                             ("Perdido", "Perdido")]), label="Estado")
-	state = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
+	                             ("1", "Disponible"),
+	                             ("2", "Prestado"),
+	                             ("3", "En Reparación"),
+	                             ("4", "Perdido")]), label="Estado")
+	type = forms.CharField(widget=forms.Select(choices=[("none", "Tipo")]),
 	                        label="Tipo")
 
 	def __init__(self, *args, **kwargs):
