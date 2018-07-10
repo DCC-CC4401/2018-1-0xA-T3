@@ -16,13 +16,44 @@
                 <form action="" method="post">{% csrf_token %}<button type="submit" class="btn btn-outline-dark">Borrar Seleccionados</button>
                     <table class="table table-sm">
                         <tbody>
+                            <tr>
+                                <th>
+                                </th>
+                                <th>
+                                    Artículo
+                                </th>
+                                <th>
+                                    Desde
+                                </th>
+                                <th>
+                                    Hasta
+                                </th>
+                                <th>
+                                    Estado Préstamo
+                                </th>
+                                <th>
+                                    Estado Artículo
+                                </th>
+                            </tr>
                             {% for article_loan in article_history %}
                                 <tr>
-                                    <th scope="row">
+                                    <td scope="row">
                                         <input type="checkbox" name ="todelete" value="{{ article_loan.id }}"/>
-                                    </th>
+                                    </td>
                                     <td>
                                         {{ article_loan.article.name }}
+                                    </td>
+                                    <td>
+                                        {{ article_loan.init_date }}
+                                    </td>
+                                    <td>
+                                        {{ article_loan.end_date }}
+                                    </td>
+                                    <td>
+                                        {{ article_loan.state }}
+                                    </td>
+                                 <td>
+                                        {{ article_loan.article.state }}
                                     </td>
                                 </tr>
                             {% endfor %}

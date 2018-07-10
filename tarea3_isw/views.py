@@ -393,9 +393,14 @@ def perfil_usuario_dueno(request):
 		todel = request.POST.getlist('todelete')
 		ArticleLoan.objects.filter(user=request.user, id__in=todel).delete()
 
+	#string_states = [str(LoanStates(article_loan.state)) for article_loan in article_history]
+	for art_loan in article_history:
+		art_loan.state = str(LoanStates(art_loan.state))
+		art_loan.article.state = str(ArticleStates(art_loan.article.state))
+
 	context = {
 		'article_history': article_history,
-		'place_history': place_history
+		'place_history': place_history,
 	}
 	context = {**context, **common_context_logged(request)}
 	return HttpResponse(template.render(context, request))
