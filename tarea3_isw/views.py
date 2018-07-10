@@ -214,6 +214,12 @@ def landing_page_pn_articulos(request):
 						set = []
 						n = 0
 
+					# Checkea que el estado del articulo sea correcto
+					if form.cleaned_data['state'] != 'none' \
+							and item.state != \
+							int(form.cleaned_data['state']):
+						continue
+
 					# Checkea que el tipo del articulo sea correcto
 					if form.cleaned_data['type'] != 'none' and item.type != \
 							form.cleaned_data['type']:

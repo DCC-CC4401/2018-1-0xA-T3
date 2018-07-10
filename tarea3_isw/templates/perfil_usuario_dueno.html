@@ -1,46 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
     {# aqui va el html especifico #}
-
-    <div class="row-element">
-    <ul class="horiz-tab">
-        <li class="{{ class_articulos }}"><a href="/landing-page-pn/articulos">Pide Tu Artículo</a></li>
-        <li class="{{ class_espacios }}"><a href="/landing-page-pn/espacios">Reserva Tu Espacio</a></li>
-    </ul>
+    <div class="my-3" align="center">
+        <a href="/landing-page-pn/articulos" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Pide Tu Artículo</a>
+        <a href="/landing-page-pn/espacios" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Reserva Tu Espacio</a>
     </div>
-
-    <div align="center">
+    <div class="my-3" align="center">
         {#    Elegir tabs de reserva o prestamo#}
-        <input type="button" value="Préstamos" align="right" onclick="displayArticleHistory()"> <input type="button" value="Reservas" align="left" onclick="displayPlaceHistory()"/>
+        <button type="button" class="btn btn-secondary" onclick="displayArticleHistory()">Préstamos</button>
+        <button type="button" class="btn btn-secondary" onclick="displayPlaceHistory()">Reservas</button>
     </div>
-
-    <div id="history">
+    <div class="my-3" id="history">
         <!-- Tabs con prestamos/reservas pasadas-->
-        <div id="article-history" align="center">
-        <p>Préstamos</p>
-            <table style="float: left">
+            <div class="my-3" id="article-history" align="center">
+                <form action="" method="post">{% csrf_token %}<button type="submit" class="btn btn-outline-dark">Borrar Seleccionados</button>
+                    <table class="table table-sm">
+                        <tbody>
+                            {% for article_loan in article_history %}
+                                <tr>
+                                    <th scope="row">
+                                        <input type="checkbox" name ="todelete" value="{{ article_loan.id }}"/>
+                                    </th>
+                                    <td>
+                                        {{ article_loan.article.name }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
 
-                    {% for article_loan in article_history %}
+        <div class="my-3" id="place-history" align="center" style="display: none">
+        <form action="/perfil-usuario-dueno-espacios/" method="post">{% csrf_token %}<button type="submit" class="btn btn-outline-dark">Borrar Seleccionados</button>
+            <table class="table table-sm">
+                <tbody>
+                    {% for place_res in place_history %}
                         <tr>
-                        <td>
-                            {{ article_loan.article.name }}
-                        </td>
+                            <th scope="row">
+                                <input type="checkbox" name ="todelete" value="{{ place_res.id }}"/>
+                            </th>
+                            <td>
+                                {{ place_res.espacio.name }}
+                            </td>
                         </tr>
                     {% endfor %}
+                </tbody>
             </table>
-        </div>
-
-        <div id="place-history" align="center" style="display: none">
-        <p>Reservas</p>
-            <table style="float: right">
-                <td>
-                    {% for place in place_history %}
-                        <tr>
-                            {{ place.name }}
-                        </tr>
-                    {% endfor %}
-                </td>
-            </table>
+        </form>
         </div>
 
         <div id="history-details">
@@ -51,7 +58,6 @@
             </table>
         </div>
     </div>
-
     <script>
         var art_hist = document.getElementById("article-history");
         var place_hist = document.getElementById("place-history");

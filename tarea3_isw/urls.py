@@ -14,6 +14,7 @@ urlpatterns = [
     path('landing-page-pn/articulos/', views.landing_page_pn_articulos, name='landing_page_pn_articulos'),
     path('landing-page-pn/espacios/', views.landing_page_pn_espacios, name='landing_page_pn_espacios'),
     path('perfil-usuario-dueno/', views.perfil_usuario_dueno, name='perfil_usuario_dueno'),
+    path('perfil-usuario-dueno-espacios/', views.perfil_usuario_dueno_espacios, name='perfil_usuario_dueno_espacios'),
     path('login/', views.login, name='login'),
     path('register/', views.register, name='register'),
     path('logout/', views.logout, name='logout'),
