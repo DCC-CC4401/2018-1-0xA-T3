@@ -9,7 +9,6 @@ from datetime import datetime
 from .forms import LoginForm, RegisterForm, SearchForm, CreateArticleForm, \
 	AskArticleLoanForm, ModifyArticleForm
 from .models import Article, ArticleLoan, PlaceReservation
-	AskArticleLoanForm
 from .models import Article, ArticleLoan, PlaceReservation, User, Place
 from .db_utils import any_article_id, get_article_by_id
 
